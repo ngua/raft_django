@@ -1,0 +1,51 @@
+{% extends "raft/main_area.html" %}
+{% load static %}
+{% block title %} Services {% endblock title %}
+{% block breadcrumb %}
+<li><span>Services</span></li>
+{% endblock breadcrumb %}
+{% block area %}
+<section class="uk-section uk-section-small uk-section-secondary">
+  <div class="uk-container uk-container-small">
+    <header class="uk-text-center">
+      <h1 class="uk-heading">Our Services</h1>
+      <hr class="uk-divider-small uk-text-center">
+    </header>
+</section>
+{% for category in categories %}
+<section id="{{ category.short_name }}" class="uk-light uk-box-shadow-medium uk-section uk-section-secondary uk-padding-remove-top">
+  <div class="uk-container">
+    <div class="uk-grid uk-flex-middle uk-child-width-1-2@l">
+      <div>
+        <h2 class="uk-header">{{ category.name }}</h2>
+        <img class="uk-align-center" data-src="{% static 'raft/img/'|add:category.picture_path %}" width="300" height="300" alt="{{ category.name }}" uk-img>
+      </div>
+      <div class="uk-first-column">
+        <table class="uk-table uk-table-divider uk-table-hover">
+          <tbody>
+            {% for service in category.services_sorted.all %}
+            <tr>
+              <td>
+                <ul uk-accordion>
+                  <li>
+                    <a class="uk-accordion-title" href="#">{{ service.name }}</a>
+                    <div class="uk-accordion-content">{{ service.description }}</div>
+                  </li>
+                </ul>
+              </td>
+              <td>{{ service.price }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+        <div class="uk-grid uk-grid-small uk-align-center uk-width-1-3@m">
+          <div>
+            <a class="uk-align-center uk-button uk-button-default" href="{% url 'estimate' %}">Get Started</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endfor %}
+{% endblock area %}

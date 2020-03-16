@@ -1,0 +1,46 @@
+{% extends "raft/main_area.html" %}
+{% load static %}
+{% block title %} Price Estimate {% endblock title %}
+{% block breadcrumb %}
+<li><a href="{% url 'services' %}">Services</a></li>
+<li><span>Price Estimate</span></li>
+{% endblock breadcrumb %}
+{% block area %}
+<section class="uk-section uk-section-small uk-section-secondary">
+  <div class="uk-container uk-container-small">
+    <header class="uk-text-center">
+      <h1 class="uk-heading">Price Estimate</h1>
+      <hr class="uk-divider-small uk-text-center">
+    </header>
+    <div class="uk-text-center">
+      <p>Select from our services below to receive a price estimate</p>
+    </div>
+  </div>
+  <div class="uk-container uk-container-large">
+    <div class="uk-child-width-1-2@s uk-child-width-1-4@m uk-flex-center uk-text-center uk-grid-divider" uk-grid>
+      {% for form in formset %}
+      <form id="{{ form.model.id }}" class="uk-form-stacked uk-text-left" action="">
+        {{ form.non_form_errors }}
+        <fieldset class="uk-fieldset">
+          <h4 class="">{{ form.legend }}</h4>
+          <br>
+          <div class="uk-margin uk-width-large">
+            {% for service in form.services %}
+            {{ form.subject.errors }}
+            <label style="display: block ruby;">
+              <input class="uk-radio" type="radio" name="radio"> {{ service }}
+            </label>
+            {% endfor %}
+          </div>
+        </fieldset>
+      </form>
+      {% endfor %}
+    </div>
+    <div class="uk-grid uk-width-1-4@m uk-align-center">
+      <div class="uk-width-1-2@m uk-align-center">
+        <a class="uk-button uk-button-primary" href="">Calculate</a>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock area %}

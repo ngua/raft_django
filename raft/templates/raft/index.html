@@ -1,0 +1,97 @@
+{% extends "raft/base.html" %}
+{% load static %}
+{% block title %}HOME{% endblock %}
+{% block content %}
+<div class="uk-cover-container uk-light uk-flex uk-flex-middle top-wrap-height">
+  <div class="uk-container uk-flex-auto top-container uk-position-relative uk-margin-medium-top" data-uk-parallax="y: 0,50; easing:0; opacity:0.2">
+    <div class="uk-width-1-2@s" data-uk-scrollspy="cls: uk-animation-slide-right-medium; target: > *; delay: 150">
+      <code class="uk-text-primary uk-margin-small-bottom">CTY TNHH RAFT</code>
+      <h1 class="uk-margin-remove-top">Web Development Solutions</h1>
+      <p class="subtitle-text uk-visible@s">//TODO</p>
+      <a href="#" title="Explore" class="uk-button uk-button-primary" data-uk-scrollspy-class="uk-animation-fade">Explore</a>
+    </div>
+  </div>
+  <img data-src="{% static 'raft/img/index_top.jpg' %}" data-sizes="100vw" alt="" data-uk-cover data-uk-img data-uk-parallax="opacity: 1,0.1; easing:0" >
+  <div class="uk-position-bottom-center uk-position-medium uk-position-z-index uk-text-center">
+    <a href="#services" data-uk-scroll="duration: 500" data-uk-icon="icon: arrow-down; ratio: 2"></a>
+  </div>
+</div>
+<section id="services" class="uk-section uk-section-secondary uk-padding-remove-top">
+  <div class="uk-container">
+    <div class="uk-section uk-section-small uk-padding-remove-top">
+      <div class="uk-container uk-container-xsmall uk-text-center uk-section uk-padding-remove-top uk-padding-remove-bottom">
+        <h4 class="uk-text-primary uk-padding-small">OUR SERVICES</h4>
+      </div>
+      <hr class="uk-divider-small uk-text-center">
+      <ul class="uk-subnav uk-flex uk-flex-center" data-uk-switcher="connect: .uk-switcher; animation: uk-animation-fade">
+        {% for item in switcher %}
+        <div class="uk-margin-small-top">
+          <li><a class="uk-button uk-button-default" href="#">{{ item.title }}</a></li>
+        </div>
+        {% endfor %}
+      </ul>
+    </div>
+    <ul class="uk-switcher uk-margin">
+      {% for item in switcher %}
+      <li>
+        <div class="uk-grid uk-child-width-1-2@l uk-flex-middle" data-uk-grid data-uk-scrollspy="target: > div; cls: uk-animation-slide-left-medium">
+          <div>
+            <img class="uk-align-center" data-src="{% static 'raft/img/'|add:item.img %}" alt="" uk-img>
+          </div>
+          <div data-uk-scrollspy-class="uk-animation-slide-right-medium">
+            <h6 class="uk-text-primary">{{ item.title | upper }}</h6>
+            <p class="subtitle-text">{{ item.desc }}</p>
+            <div class="uk-grid uk-child-width-1-2@s" data-uk-grid>
+              {% for subitem in item.sub %}
+              <div>
+                <h4>{{ subitem.title }}</h4>
+                <p>{{ subitem.desc }}</p>
+              </div>
+              {% endfor %}
+            </div>
+            <div class="uk-padding-small uk-padding-remove-horizontal">
+              <a class="uk-button uk-button-default" href="{% url 'services' %}#{{ item.href }}" >Find Out More</a>
+            </div>
+          </div>
+        </div>
+      </li>
+      {% endfor %}
+  </ul>
+</section>
+<div data-src="{% static 'raft/img/index_slider.jpg' %}" uk-img>
+  <section class="uk-cover-container overlay-wrap">
+    <div class="uk-container uk-position-z-index uk-position-relative uk-section uk-section-large uk-light">
+      <div class="uk-grid uk-flex-center">
+        <div class="uk-width-3-4@m" data-uk-parallax="y: 50,-50; easing: 0; media:@l">
+          <div uk-slider="">
+            <div class="uk-position-relative uk-visible-toggle uk-light" data-uk-slider="easing: cubic-bezier(.16,.75,.47,1)">
+              <ul class="uk-slider-items uk-child-width-1-1">
+                {% for item in slider %}
+                <li>
+                  <div data-uk-slider-parallax="opacity: 0.2,1,0.2">
+                    <h5>{{ item.title }}</h5>
+                    <h2 class="uk-margin-small-top">{{ item.header }}</h2>
+                    <div class="uk-child-width-expand@s" uk-grid>
+                      {% for sub in item.content %}
+                      <ul class="uk-list uk-list-small">
+                        <li><span uk-icon="icon: {{ sub.icon }}"></span></li>
+                        <li><p class="uk-text-meta">{{ sub.name }}</p></li>
+                      </ul>
+                      {% endfor %}
+                    </div>
+                  </div>
+                  <div class="uk-padding-small uk-padding-remove-left">
+                    <a class="uk-button uk-button-secondary" href="{{ item.href }}" title="Explore">{{ item.link }}</a>
+                  </div>
+                  {% endfor %}
+                </li>
+              </ul>
+              <ul class="uk-slider-nav uk-dotnav uk-margin-top"><li></li></ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+{% endblock content %}
