@@ -49,3 +49,7 @@
     opacity: 0.7;
     font-weight: 300;
 }
+
+ul.radio {
+    list-style-type: none;
+}

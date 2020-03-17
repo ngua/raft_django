@@ -38,3 +38,7 @@ class Service(models.Model):
 
     def __str__(self):
         return f'{self.name}: {self.price}'
+
+    @staticmethod
+    def sum_price(*args):
+        return sum(arg.price for arg in args)

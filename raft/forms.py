@@ -1,5 +1,6 @@
 from django.forms import forms
 from django.forms import ChoiceField
+from django.forms.widgets import RadioSelect
 from .models import Category
 
 
@@ -13,6 +14,6 @@ class EstimateForm(forms.Form):
             for service in self.model.service_set.all()
         )
         self.fields['services'] = ChoiceField(
-            choices=choices
+            choices=choices,
+            widget=RadioSelect(attrs={'class': 'radio'})
         )
-        self.legend = self.model.name
