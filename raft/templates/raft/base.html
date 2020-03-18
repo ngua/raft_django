@@ -1,6 +1,7 @@
 {% load static %}
+{% load i18n %}
 <!DOCTYPE html>
-<html lang="en">
+<html>
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -24,11 +25,19 @@
             <div class="uk-navbar-right">
               <ul class="uk-navbar-nav uk-visible@s">
                 <li class="uk-active uk-visible@m"><a href="{% url 'index' %}" data-uk-icon="home"></a></li>
-                <li><a href="{% url 'services' %}">Services</a></li>
-                <li><a href="#">About</a></li>
-                <li><a href="#">Contact</a></li>
-                <li><a href="#"><img class="icon uk-padding-remove-right" src="{% static 'raft/img/en.svg' %}" alt="en" uk-svg width="20" height="20"></a></li>
-                <li><a href="#"><img class="icon uk-padding-remove-left" src="{% static 'raft/img/vn.svg' %}" alt="vn" uk-svg width="20" height="20"></a></li>
+                <li><a href="{% url 'services' %}">{% trans 'Services'%}</a></li>
+                <li><a href="#">{% trans 'About' %}</a></li>
+                <li><a href="#">{% trans 'Contact' %}</a></li>
+                {% get_current_language as LANGUAGE_CODE %}
+                {% get_available_languages as LANGUAGES %}
+                {% get_language_info_list for LANGUAGES as languages %}
+                {% for language in languages %}
+                <form action="{% url 'set_language' %}" id="form_{{ language.code}}" class="uk-animation-fade" method="POST" style="display: inline ruby">{% csrf_token %}
+                    <input name="next" type="hidden" value="{{ request.get_full_path|slice:'3:' }}">
+                    <input name="language" type="hidden" value="{{ language.code }}">
+                </form>
+                <li><button type="submit" form="form_{{ language.code}}" class="lang" {% if language.code == LANGUAGE_CODE%}disabled{% endif %}><img class="uk-animation-fade uk-align-bottom icon uk-margin-left" src="{% static 'raft/img/'|add:language.code|add:'.svg' %}" alt="{{ language.code }}" uk-svg width="20" height="20"></button></li>
+                {% endfor %}
               </ul>
             </div>
             <a class="uk-navbar-toggle uk-navbar-item uk-hidden@s" data-uk-toggle data-uk-navbar-toggle-icon href="#offcanvas-nav"></a>
@@ -43,46 +52,46 @@
           <li class="uk-parent">
             <code class="uk-active">RAFT</code>
             <ul class="uk-nav-sub">
-              <a href="{% url 'index' %}" data-uk-icon="home"></a>
-              <li><a href="{% url 'services' %}">Services</a></li>
-              <li><a href="#">Contact</a></li>
-              <li><a href="#">About</a></li>
+                <a href="{% url 'index' %}" data-uk-icon="home"></a>
+                <li><a href="{% url 'services' %}">{% trans 'Services'%}</a></li>
+                <li><a href="#">{% trans 'About' %}</a></li>
+                <li><a href="#">{% trans 'Contact' %}</a></li>
             </ul>
           </li>
         </ul>
         <h5>CTY TNHH RAFT</h5>
         <hr>
         <small class="uk-text-muted">
-          &copy; RAFT 2020
+            &copy; RAFT 2020
         </small>
       </div>
     </div>
     {% block content %}{% endblock %}
     <footer class="uk-section uk-section-secondary uk-padding-remove-bottom">
-      <div class="uk-container">
-        <div class="uk-grid uk-grid-large" data-uk-grid>
-          <div class="uk-width-1-2@m">
-            <h5>&copy; RAFT 2020</h5>
-            <div>
-              <a href="#" class="uk-icon-button" data-uk-icon="facebook"></a>
-              <a href="#" class="uk-icon-button" data-uk-icon="whatsapp"></a>
+        <div class="uk-container">
+            <div class="uk-grid uk-grid-large" data-uk-grid>
+                <div class="uk-width-1-2@m">
+                    <h5>&copy; RAFT 2020</h5>
+                    <div>
+                        <a href="#" class="uk-icon-button" data-uk-icon="facebook"></a>
+                        <a href="#" class="uk-icon-button" data-uk-icon="whatsapp"></a>
+                    </div>
+                </div>
+                <div class="uk-width-1-6@m">
+                    <h5>CTY TNHH RAFT</h5>
+                    <ul class="uk-list">
+                        <li>Address</li>
+                        <li>Phone</li>
+                    </ul>
+                </div>
             </div>
-          </div>
-          <div class="uk-width-1-6@m">
-            <h5>CTY TNHH RAFT</h5>
-            <ul class="uk-list">
-              <li>Address</li>
-              <li>Phone</li>
-            </ul>
-          </div>
         </div>
-      </div>
-      <div class="uk-text-center uk-padding uk-padding-remove-horizontal">
-        <span class="uk-text-small uk-text-muted">Powered by Python</span><img class="uk-margin-small-left uk-preserve" src="{% static 'raft/img/py.svg' %}" alt="py" height="15" width="15" uk-svg>
-        <div>
-          <span class="uk-text-small uk-text-muted">Icons made by <a href="https://www.flaticon.com/authors/smashicons" title="Smashicons">Smashicons</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></span>
+        <div class="uk-text-center uk-padding uk-padding-remove-horizontal">
+            <span class="uk-text-small uk-text-muted">Powered by Python</span><img class="uk-margin-small-left uk-preserve" src="{% static 'raft/img/py.svg' %}" alt="py" height="15" width="15" uk-svg>
+            <div>
+                <span class="uk-text-small uk-text-muted">Icons made by <a href="https://www.flaticon.com/authors/smashicons" title="Smashicons">Smashicons</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></span>
+            </div>
         </div>
-      </div>
     </footer>
     <script src="https://cdn.jsdelivr.net/npm/uikit@latest/dist/js/uikit.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/uikit@latest/dist/js/uikit-icons.min.js"></script>

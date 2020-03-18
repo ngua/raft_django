@@ -74,3 +74,33 @@ ul.checkbox {
 button#reload {
   padding-left: 30px;
 }
+
+.lang {
+    border: 0;
+    padding: 0;
+    background: none;
+    display: inline-block;
+    filter: grayscale(70);
+    opacity: 0;
+    animation: fadeDisabled 2s;
+    animation-delay: 1s;
+    animation-fill-mode: forwards;
+}
+
+@keyframes fadeDisabled {
+    from { opacity: 0; }
+    to { opacity: .6; }
+}
+
+.lang[disabled] {
+    filter: none;
+    animation: fadeEnabled 2s;
+    animation-delay: 1s;
+    animation-fill-mode: forwards;
+}
+
+
+@keyframes fadeEnabled {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}

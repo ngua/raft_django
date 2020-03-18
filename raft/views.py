@@ -8,6 +8,10 @@ from .models import Category, Service
 from .forms import EstimateForm
 
 
+def set_language(request):
+    pass
+
+
 def index(request):
     switcher_path = finders.find('raft/data/index_switcher.json')
     slider_path = finders.find('raft/data/index_slider.json')
