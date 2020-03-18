@@ -48,19 +48,26 @@ def estimate(request):
             initial=[{'model_id': category.id} for category in categories]
         )
         if formset.is_valid():
-            service_ids = [form.cleaned_data['services'] for form in formset]
-            services = [
-                Service.objects.get(id=service_id)
-                for service_id in service_ids
+            selections = [
+                form.cleaned_data['services']
+                for form in formset if form.cleaned_data['services']
             ]
-            total = Service.sum_price(*services)
-            response = {'success': True, 'total': str(total)}
+            ids = [int(id) for selection in selections for id in selection]
+            services = [Service.objects.get(id=int(id)) for id in ids]
+            total = EstimateForm.sum_price(*services)
+            response = {
+                'success': True,
+                'total': str(total),
+                'services': [service.name for service in services]
+            }
         else:
             response = {
                 'success': False,
-                'errors': {form.model.id: form['services'].errors for form in formset if form.errors}
+                'errors': {
+                    form.model.id: form['services'].errors
+                    for form in formset if form.errors
+                }
             }
-            print(response)
         return JsonResponse(response)
     elif request.method == 'GET':
         formset = EstimateFormset(

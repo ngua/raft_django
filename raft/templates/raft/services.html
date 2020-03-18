@@ -33,7 +33,7 @@
                   </li>
                 </ul>
               </td>
-              <td>{{ service.price }}</td>
+              <td>{% if service.price%}{{ service.price }}{% else %}FREE{% endif %}</td>
             </tr>
             {% endfor %}
           </tbody>

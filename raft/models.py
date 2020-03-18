@@ -4,6 +4,7 @@ from djmoney.models.fields import MoneyField
 
 class Category(models.Model):
     name = models.CharField(max_length=200)
+    form_required = models.BooleanField(default=True)
     picture_path = models.CharField(max_length=50)
 
     @property
@@ -38,7 +39,3 @@ class Service(models.Model):
 
     def __str__(self):
         return f'{self.name}: {self.price}'
-
-    @staticmethod
-    def sum_price(*args):
-        return sum(arg.price for arg in args)
