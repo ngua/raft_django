@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-03-18 21:06+0700\n"
+"POT-Creation-Date: 2020-03-18 21:22+0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,6 +17,26 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+
+#: raft/index.py:18
+msgid "Media"
+msgstr "Phương Tiện"
+
+#: raft/index.py:22
+msgid "Education"
+msgstr "Giáo Dục"
+
+#: raft/index.py:35 raft/index.py:71 raft/templates/raft/index.html:12
+msgid "Explore"
+msgstr "Tìm hiểu"
+
+#: raft/index.py:42
+msgid "Source code"
+msgstr "Mã Nguồn"
+
+#: raft/index.py:101
+msgid "Deployment"
+msgstr "Triển Khai"
 
 #: raft/templates/raft/base.html:28 raft/templates/raft/base.html:56
 msgid "Services"
@@ -34,13 +54,9 @@ msgstr "Liên Hệ"
 msgid "Web Development Solutions"
 msgstr "Giải Pháp Lập Trình Web"
 
-#: raft/templates/raft/index.html:12
-msgid "Explore"
-msgstr "Tìm hiểu"
-
 #: raft/templates/raft/index.html:24
 msgid "OUR SERVICES"
-msgstr "Dịch Vụ Của Chúng Tôi"
+msgstr "DỊCH VỤ CỦA CHÚNG TÔI"
 
 #: raft_django/settings.py:112
 msgid "English"
