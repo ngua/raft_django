@@ -12,7 +12,7 @@
       <a href="#" title="Explore" class="uk-button uk-button-primary" data-uk-scrollspy-class="uk-animation-fade">{% trans 'Explore' %}</a>
     </div>
   </div>
-  <img data-src="{% static 'raft/img/index_top.jpg' %}" data-sizes="100vw" alt="" data-uk-cover data-uk-img data-uk-parallax="opacity: 1,0.1; easing:0" >
+  <img data-src="{% static 'raft/img/index_top.jpg' %}" data-sizes="100vw" alt="" data-uk-cover data-uk-img data-uk-parallax="easing:0; blur:10" >
   <div class="uk-position-bottom-center uk-position-medium uk-position-z-index uk-text-center">
     <a href="#services" data-uk-scroll="duration: 500" data-uk-icon="icon: arrow-down; ratio: 2"></a>
   </div>
@@ -51,7 +51,7 @@
               {% endfor %}
             </div>
             <div class="uk-padding-small uk-padding-remove-horizontal">
-              <a class="uk-button uk-button-default" href="{% url 'services' %}#{{ item.href }}" >Find Out More</a>
+              <a class="uk-button uk-button-default" href="{% url 'services' %}#{{ item.href }}" >{% trans 'Find Out More' %}</a>
             </div>
           </div>
         </div>

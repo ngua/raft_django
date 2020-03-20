@@ -11,6 +11,7 @@
     <meta name="copyright" content="tnhh raft">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/uikit@latest/dist/css/uikit.min.css">
     <link rel="stylesheet" type="text/css" href="{% static 'raft/css/main.css' %}">
+    {% block head %}{% endblock head %}
     <title>{% block title %} {% endblock %} | RAFT </title>
   </head>
   <body>
@@ -28,7 +29,7 @@
                 <li class="uk-active uk-visible@m"><a href="{% url 'index' %}" data-uk-icon="home"></a></li>
                 <li><a href="{% url 'services' %}">{% trans 'Services'%}</a></li>
                 <li><a href="#">{% trans 'About' %}</a></li>
-                <li><a href="#">{% trans 'Contact' %}</a></li>
+                <li><a href="{% url 'contact' %}">{% trans 'Contact' %}</a></li>
                 {% get_current_language as LANGUAGE_CODE %}
                 {% get_available_languages as LANGUAGES %}
                 {% get_language_info_list for LANGUAGES as languages %}
@@ -56,7 +57,7 @@
                 <a href="{% url 'index' %}" data-uk-icon="home"></a>
                 <li><a href="{% url 'services' %}">{% trans 'Services'%}</a></li>
                 <li><a href="#">{% trans 'About' %}</a></li>
-                <li><a href="#">{% trans 'Contact' %}</a></li>
+                <li><a href="{% url 'contact' %}">{% trans 'Contact' %}</a></li>
             </ul>
           </li>
         </ul>

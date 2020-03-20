@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-03-18 21:22+0700\n"
+"POT-Creation-Date: 2020-03-19 16:05+0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,6 +18,17 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
+msgid "Find Out More"
+msgstr "Tìm hiểu"
+
+#: raft/index.py:6
+msgid "WEB APPS AND SERVICES"
+msgstr "APP, DỊCH VỤ WEB"
+
+#: raft/index.py:7
+msgid "Choose from our range of web services:"
+msgstr "Chọn từ các dịch vụ đa dạng trên web:"
+
 #: raft/index.py:18
 msgid "Media"
 msgstr "Phương Tiện"
@@ -26,27 +37,224 @@ msgstr "Phương Tiện"
 msgid "Education"
 msgstr "Giáo Dục"
 
-#: raft/index.py:35 raft/index.py:71 raft/templates/raft/index.html:12
+#: raft/index.py:30
+msgid "...and more"
+msgstr "...hơn nữa"
+
+#: raft/index.py:35 raft/index.py:75 raft/templates/raft/index.html:12
 msgid "Explore"
 msgstr "Tìm hiểu"
+
+#: raft/index.py:38
+#, fuzzy
+#| msgid "OUR SERVICES"
+msgid "SERVICE"
+msgstr "DỊCH VỤ CỦA CHÚNG TÔI"
+
+#: raft/index.py:39
+msgid "What you get when you choose RAFT:"
+msgstr "Bạn có được gì từ RAFT:"
 
 #: raft/index.py:42
 msgid "Source code"
 msgstr "Mã Nguồn"
 
-#: raft/index.py:101
+#: raft/index.py:46
+#, fuzzy
+#| msgid "Deployment"
+msgid "Seamless deployment"
+msgstr "Triển Khai"
+
+#: raft/index.py:50
+msgid "Long-term maintenance and support"
+msgstr "Bảo trì và hỗ trợ lâu dài"
+
+#: raft/index.py:54
+msgid "Access control"
+msgstr "Điều khiển truy cập"
+
+#: raft/index.py:58
+msgid "Security and encryption"
+msgstr "Bảo mật và mã hóa"
+
+#: raft/index.py:62
+msgid "Customization to meet your needs"
+msgstr "Tùy biến để đáp ứng nhu cầu"
+
+#: raft/index.py:66
+msgid "Bilingual development"
+msgstr "Phát triển song ngữ"
+
+#: raft/index.py:70
+msgid "Quality, performant code"
+msgstr "Chất lượng, mã biểu diễn"
+
+#: raft/index.py:81
+msgid "Web Apps"
+msgstr "App web"
+
+#: raft/index.py:82
+msgid "Reach New Customers and Expand Your Business"
+msgstr "Tiếp Cận Khách Hàng Mới Và Mở Rộng Kinh Doanh"
+
+#: raft/index.py:87
+msgid "Built with Modern Languages"
+msgstr "Được Xây Dựng Với Các Ngôn Ngữ Hiện Đại"
+
+#: raft/index.py:88
+msgid ""
+"RAFT builds applications using only the most performant, safe, and modern "
+"technologies."
+msgstr "RAFT xây dựng những ứng dụng bằng vận hành tốt nhất, an toàn nhất "
+"và hiện đại nhất"
+
+#: raft/index.py:91
+msgid "Scalable Architecture"
+msgstr "Mở Rộng Cấu Trúc"
+
+#: raft/index.py:92
+msgid ""
+"Even if you're just starting out, RAFT build with future expansion in mind."
+msgstr ""
+"Thậm chí khi bạn mới bắt đầu, RAFT sẽ xây dựng ý tưởng mở rộng trong tương lai."
+
+#: raft/index.py:95
+msgid "Bilingual Development"
+msgstr "Phát triển song ngữ"
+
+#: raft/index.py:96
+msgid ""
+"RAFT employs native Vietnamese and English speakers to help you reach the "
+"widest possible audience at home and abroad. Don't let poor translations "
+"stand in the way of your success."
+msgstr ""
+"RAFT với đội ngũ nhân viên thông thạo tiếng Việt và tiếng Anh giúp cho bạn tiếp cận "
+"rộng rãi nhất với khách hàng trong và ngoài nước. Đừng để những lỗi phiên dịch ngăn "
+"cản con đường thành công của bạn."
+
+#: raft/index.py:99
+#, fuzzy
+#| msgid "Deployment"
+msgid "Easy Deployment"
+msgstr "Dễ Dàng Triển Khai"
+
+#: raft/index.py:100
+msgid ""
+"RAFT takes care of your application's deployment and maintenance, and works "
+"with you to find the best solution for your business."
+msgstr ""
+"RAFT chịu trách nhiệm cho việc triển khai ứng dụng, duy trì và làm việc với "
+"bạn để tìm ra phương án tốt nhất cho doanh nghiệp của bạn"
+
+#: raft/index.py:105
 msgid "Deployment"
 msgstr "Triển Khai"
 
-#: raft/templates/raft/base.html:28 raft/templates/raft/base.html:56
+#: raft/index.py:106
+msgid "Reliable and Scalable Builds"
+msgstr "Các mẫu dựng đáng tin cậy và có khả năng mở rộng"
+
+#: raft/index.py:111
+msgid "Support and Administration"
+msgstr "Hỗ trợ và quản trị"
+
+#: raft/index.py:112
+msgid ""
+"RAFT will work with you to deploy your application to cloud servers. Once "
+"your app is up and running, RAFT will continue to take care of the "
+"administration and maintenance of your app."
+msgstr ""
+"RAFT sẽ làm việc với bạn để triển khai ứng dụng lên các máy chủ đám mây. Một khi "
+"ứng dụng của bạn được tải lên và hoạt động, RAFT sẽ tiếp tục hỗ trợ "
+"quản trị và duy trì ứng dụng của bạn."
+
+#: raft/index.py:115
+msgid "Containerization"
+msgstr "Container hóa"
+
+#: raft/index.py:116
+msgid ""
+"Increase your app's portability by choosing RAFT's containerization service."
+msgstr ""
+"Tăng tính di động với dịch vụ container hóa của RAFT."
+
+#: raft/index.py:119
+msgid "Domain Name Registration"
+msgstr "Đăng Kí Tên Miền"
+
+#: raft/index.py:120
+msgid ""
+"RAFT takes care of the purchase and registration of your custom domain name."
+msgstr ""
+"RAFT chịu trách nhiệm về việc đăng ký và sở hữu tên miền tùy chỉnh."
+
+#: raft/index.py:123
+msgid "SSL Certification"
+msgstr "Chứng Nhận SSL"
+
+#: raft/index.py:124
+msgid ""
+"All of our web applications come with free SSL certification to encrypt "
+"traffic to and from your server."
+msgstr ""
+"Tất cả các ứng dụng sẽ được đi kèm với "
+"chứng nhận SSl miễn phí để mã hóa."
+
+#: raft/index.py:129
+msgid "...And More"
+msgstr "...Hơn Nữa"
+
+#: raft/index.py:130
+msgid "More Services to Meet Your Needs"
+msgstr "Thêm Dịch Vụ Để Đáp Ứng Nhu Cầu Của Bạn"
+
+#: raft/index.py:135
+#, fuzzy
+#| msgid "Source code"
+msgid "Source Code Included"
+msgstr "Mã Nguồn"
+
+#: raft/index.py:136
+msgid ""
+"RAFT provides you with all of your app's source code, free of charge, for "
+"easy transfer and reproduction."
+msgstr ""
+"RAFT cung cấp cho bạn tất cả những mã nguồn của ứng dụng, không tính phí, để "
+"dễ dàng chuyển nhượng và sao chép."
+
+#: raft/index.py:139
+msgid "Data Management"
+msgstr "Quản Lý Dữ Liệu"
+
+#: raft/index.py:140
+msgid ""
+"Choose from relational databases including MySQL and PostgreSQL or NoSQL "
+"solutions, including Redis, MongoDB, and more."
+msgstr ""
+"Chọn từ dữ liệu liên quan bao gồm MySQL và PostgreSQL hoặc các giải pháp NoSQL "
+"bao gồm Redis, MongoDB, và hơn nữa."
+
+#: raft/index.py:143
+msgid "On-Site Training"
+msgstr "Huấn Luyện Tại Chỗ"
+
+#: raft/index.py:144
+msgid ""
+"If your team requires training in additional technical skills, RAFT can help "
+"train them in Git, Vim, and the Linux command line."
+msgstr ""
+"Nếu team của bạn cần được đào tạo các kỹ năng kỹ thuật, RAFT có thể đào tạo về "
+"Git, Vim và dòng lệnh Linux."
+
+#: raft/templates/raft/base.html:29 raft/templates/raft/base.html:57
 msgid "Services"
 msgstr "Dịch Vụ"
 
-#: raft/templates/raft/base.html:29 raft/templates/raft/base.html:57
+#: raft/templates/raft/base.html:30 raft/templates/raft/base.html:58
 msgid "About"
 msgstr "Giới Thiệu"
 
-#: raft/templates/raft/base.html:30 raft/templates/raft/base.html:58
+#: raft/templates/raft/base.html:31 raft/templates/raft/base.html:59
 msgid "Contact"
 msgstr "Liên Hệ"
 
@@ -65,3 +273,4 @@ msgstr "Anh"
 #: raft_django/settings.py:113
 msgid "Vietnamese"
 msgstr "Việt"
+

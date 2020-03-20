@@ -1,0 +1,85 @@
+{% extends "raft/main_area.html" %}
+{% load static %}
+{% load i18n %}
+{% load widget_tweaks %}
+{% block head %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css"/>
+<link rel="stylesheet" href="{% static 'raft/css/contact.css' %}">
+{% endblock head %}
+{% block title %} Contact Us {% endblock title %}
+{% block breadcrumb %}
+<li><span>Contact Us</span></li>
+{% endblock breadcrumb %}
+{% block area %}
+<section class="uk-section uk-section-small uk-section-secondary">
+  <div class="uk-container uk-container-small">
+    <header class="uk-text-center">
+      <h1 class="uk-heading">{% trans 'Contact Us' %}</h1>
+      <hr class="uk-divider-small uk-text-center">
+    </header>
+  </div>
+  <div class="uk-child-width-1-4@m uk-light">
+    <div class="uk-container uk-container-small uk-animation-fade">
+      <fieldset class="uk-fieldset">
+        <form id="form" class="uk-form uk-form-stacked uk-text-center" action="" method="POST" novalidate>{% csrf_token %}
+          <div class="uk-margin">
+            {% render_field form.name placeholder=form.name.label class='uk-input' %}
+            {% if form.name.errors %}
+            {% for error in form.name.errors %}
+            <span class="uk-text-danger">
+              {{ error }}
+            </span>
+            {% endfor %}
+            {% endif %}
+          </div>
+          <div class="uk-margin">
+            {% render_field form.email placeholder='name@example.com' class='uk-input' %}
+            {% if form.email.errors %}
+            {% for error in form.email.errors %}
+            <span class="uk-text-danger">
+              {{ error }}
+            </span>
+            {% endfor %}
+            {% endif %}
+          </div>
+          <div class="uk-margin">
+            {% render_field form.subject placeholder=form.subject.label class='uk-input' %}
+            {% if form.subject.errors %}
+            {% for error in form.subject.errors %}
+            <span class="uk-text-danger">
+              {{ error }}
+            </span>
+            {% endfor %}
+            {% endif %}
+          </div>
+          <div class="uk-margin">
+            {% render_field form.message class='uk-textarea' rows=6 %}
+            {% if form.message.errors %}
+            {% for error in form.message.errors %}
+            <span class="uk-text-danger">
+              {{ error }}
+            </span>
+            {% endfor %}
+            {% endif %}
+          </div>
+          <div class="uk-margin">
+            <label for="{{ form.services.id_for_label }}">Choose a Service or Services
+            {% render_field form.services id='services' class='uk-secondary' %}
+          </label></div>
+          <input class="uk-button uk-button-primary" type="submit" value="Submit">
+        </form>
+      </fieldset>
+    </div>
+  </div>
+</section>
+<hr class="footer-divider">
+{% endblock area %}
+{% block body_js %}
+<script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
+<script>
+  const choice = new Choices($('services'), {
+    removeItemButton: true,
+    itemSelectText: ''
+  });
+</script>
+{% endblock body_js %}

@@ -1,7 +1,8 @@
-from django.forms import forms
+from django.forms import forms, ModelForm
 from django.forms import MultipleChoiceField
 from django.forms.widgets import CheckboxSelectMultiple
-from .models import Category
+from django.forms import ModelMultipleChoiceField
+from .models import Category, Contact, Service
 
 
 class EstimateForm(forms.Form):
@@ -23,3 +24,14 @@ class EstimateForm(forms.Form):
     @staticmethod
     def sum_price(*args):
         return sum(arg.price for arg in args)
+
+
+class ContactForm(ModelForm):
+    services = ModelMultipleChoiceField(
+        queryset=Service.objects,
+        required=False
+    )
+
+    class Meta:
+        model = Contact
+        fields = ['name', 'email', 'subject', 'message', 'services']

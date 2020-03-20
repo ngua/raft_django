@@ -1,5 +1,6 @@
 {% extends "raft/main_area.html" %}
 {% load static %}
+{% load i18n %}
 {% block title %} Price Estimate {% endblock title %}
 {% block breadcrumb %}
 <li><a href="{% url 'services' %}">Services</a></li>
@@ -7,24 +8,24 @@
 {% endblock breadcrumb %}
 {% block area %}
 <section class="uk-section uk-section-small uk-section-secondary">
-  <div class="uk-container uk-container-small">
+  <div class="uk-container uk-container-medium">
     <header class="uk-text-center">
       <h1 class="uk-heading">Price Estimate</h1>
       <hr class="uk-divider-small uk-text-center">
     </header>
     <div class="uk-text-center">
-      <p>Select from our services below to receive a price estimate</p>
+      <p class="uk-text-break">Select from our services below to receive a price estimate</p>
     </div>
   </div>
   <div id="estimate" class="toggle visible uk-container uk-container-large uk-animation-fade">
     <form id="form" class="uk-text-left" action="" method="POST">
-      <div class="uk-child-width-1-4@s uk-child-width-expand@m uk-flex-center uk-grid-divider" uk-grid>
+      <div class="uk-child-expand@s uk-child-width-expand@m uk-flex-center uk-grid-divider" uk-grid>
         {% csrf_token %}
         {{ formset.management_form }}
         {% for form in formset %}
         <fieldset class="uk-fieldset">
           <h4 class="uk-text-center">{{ form.legend }}</h4>
-          <div class="uk-margin uk-width-large">
+          <div class="uk-margin uk-width-medium">
             <div class="uk-text-center">
               <span id="{{ form.model.id }}" class="uk-text-danger uk-text-center">
               </span>
@@ -43,16 +44,18 @@
   </div>
   <div id="total" class="toggle uk-container uk-align-center uk-container-large ">
     <div class="uk-grid uk-grid-collapse uk-width-1-4@m uk-align-center uk-animation-fade" uk-grid>
-      <div class="uk-height-medium uk-child-width-1-1@s uk-child-width-1-1@m ">
-        <div class="uk-column-span">
+        <div class="uk-column-span uk-text-center">
           <div class="uk-card uk-card-primary uk-card-body">
             <h2 class="">Your Total</h2>
             <hr class="uk-divider-icon">
             <h4 id="total-display"></h4>
           </div>
-        </div>
-        <div class="uk-grid uk-width-1-4@m uk-align-center uk-remove-padding-left ">
+        <div class="uk-width-1-4@m uk-align-center">
           <button id="reload" class="uk-button uk-button-primary uk-text-center"><span class="" uk-icon="icon: refresh"></span></button>
+        </div>
+        <hr>
+        <div class="uk-width-expand@m uk-align-center">
+          <a href="{% url 'contact' %}" class="uk-button uk-button-primary uk-text-center">{% trans 'Get In Touch' %}</a>
         </div>
       </div>
     </div>

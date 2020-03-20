@@ -2,13 +2,10 @@ from django.shortcuts import render
 from django.forms import formset_factory
 from django.db.models import Count
 from django.http import JsonResponse
-from .models import Category, Service
-from .forms import EstimateForm
+from django.views.generic.edit import FormView
+from .models import Category, Service, Contact
+from .forms import EstimateForm, ContactForm
 from .index import slider, switcher
-
-
-def set_language(request):
-    pass
 
 
 def index(request):
@@ -72,3 +69,13 @@ def estimate(request):
         )
     context = {'formset': formset}
     return render(request, 'raft/estimate.html', context=context)
+
+
+class ContactView(FormView):
+    template_name = 'raft/contact.html'
+    form_class = ContactForm
+    success_url = '/'
+
+    def form_valid(self, form):
+        form.save()
+        return super().form_valid(form)
