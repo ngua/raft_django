@@ -2,6 +2,7 @@
 {% load static %}
 {% load i18n %}
 {% load widget_tweaks %}
+{% load honeypot %}
 {% block head %}
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css"/>
 <link rel="stylesheet" href="{% static 'raft/css/contact.css' %}">
@@ -67,6 +68,7 @@
             {% render_field form.services id='services' class='uk-secondary' %}
           </label></div>
           <input class="uk-button uk-button-primary" type="submit" value="Submit">
+          {% render_honeypot_field %}
         </form>
       </fieldset>
     </div>

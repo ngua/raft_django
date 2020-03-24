@@ -3,6 +3,8 @@ from django.forms import formset_factory
 from django.db.models import Count
 from django.http import JsonResponse
 from django.views.generic.edit import FormView
+from django.utils.decorators import method_decorator
+from honeypot.decorators import check_honeypot
 from .models import Category, Service, Contact
 from .forms import EstimateForm, ContactForm
 from .index import slider, switcher
@@ -76,6 +78,11 @@ class ContactView(FormView):
     form_class = ContactForm
     success_url = '/'
 
+    @method_decorator(check_honeypot)
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)
+
     def form_valid(self, form):
         form.save()
+        form.send_email()
         return super().form_valid(form)

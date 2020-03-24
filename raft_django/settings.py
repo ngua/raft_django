@@ -32,6 +32,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'honeypot',
     'widget_tweaks',
     'djmoney',
     'raft.apps.RaftConfig',
@@ -134,3 +135,25 @@ USE_TZ = True
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 STATIC_URL = '/static/'
+
+# Email settings
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = os.environ.get('RAFT_EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.environ.get('RAFT_EMAIL_HOST_PASSWORD')
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+DEFAULT_TO_EMAIL = [EMAIL_HOST_USER]
+
+# Redis
+REDIS_URI = os.environ.get('REDIS_URI')
+
+# Celery
+CELERY_BROKER_URL = REDIS_URI
+CELERY_RESULT_BACKEND = REDIS_URI
+CELERY_ACCEPT_CONTENT = ['application/json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+
+# Honeypot
+HONEYPOT_FIELD_NAME = 'telephone'
