@@ -4,12 +4,19 @@ from django.db.models import Count
 from django.http import JsonResponse
 from django.views.generic.edit import FormView
 from django.utils.decorators import method_decorator
+from django.core.cache.backends.base import DEFAULT_TIMEOUT
+from django.views.decorators.cache import cache_page
+from django.conf import settings
 from honeypot.decorators import check_honeypot
-from .models import Category, Service, Contact
+from .models import Category, Service
 from .forms import EstimateForm, ContactForm
 from .index import slider, switcher
 
 
+CACHE_TTL = getattr(settings, 'CACHE_TTL', DEFAULT_TIMEOUT)
+
+
+@cache_page(CACHE_TTL)
 def index(request):
     context = {'switcher': switcher, 'slider': slider}
     return render(request, 'raft/index.html', context=context)

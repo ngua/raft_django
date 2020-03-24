@@ -238,14 +238,6 @@ msgstr ""
 msgid "On-Site Training"
 msgstr "Huấn Luyện Tại Chỗ"
 
-#: raft/index.py:144
-msgid ""
-"If your team requires training in additional technical skills, RAFT can help "
-"train them in Git, Vim, and the Linux command line."
-msgstr ""
-"Nếu team của bạn cần được đào tạo các kỹ năng kỹ thuật, RAFT có thể đào tạo về "
-"Git, Vim và dòng lệnh Linux."
-
 #: raft/templates/raft/base.html:29 raft/templates/raft/base.html:57
 msgid "Services"
 msgstr "Dịch Vụ"

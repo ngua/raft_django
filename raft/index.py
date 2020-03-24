@@ -138,10 +138,6 @@ switcher = [
             {
                 'title': _('Data Management'),
                 'desc': _('Choose from relational databases including MySQL and PostgreSQL or NoSQL solutions, including Redis, MongoDB, and more.')
-            },
-            {
-                'title': _('On-Site Training'),
-                'desc': _('If your team requires training in additional technical skills, RAFT can help train them in Git, Vim, and the Linux command line.')
             }
         ]
     }

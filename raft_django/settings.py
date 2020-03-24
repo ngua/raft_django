@@ -106,6 +106,28 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+# Redis for caching and as celery taskbroker
+REDIS_URI = os.environ.get('REDIS_URI')
+
+
+# Caching
+# CACHES = {
+#     'default': {
+#         'BACKEND': 'django_redis.cache.RedisCache',
+#         'LOCATION': REDIS_URI,
+#         'OPTIONS': {
+#             'CLIENT_CLASS': 'django_redis.client.DefaultClient'
+#         },
+#         'KEY_PREFIX': 'raft_django'
+#     }
+# }
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.dummy.DummyCache',
+    }
+}
+
+CACHE_TTL = 60 * 15
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.0/topics/i18n/
@@ -144,9 +166,6 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 DEFAULT_TO_EMAIL = [EMAIL_HOST_USER]
-
-# Redis
-REDIS_URI = os.environ.get('REDIS_URI')
 
 # Celery
 CELERY_BROKER_URL = REDIS_URI
