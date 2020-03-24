@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.forms import formset_factory
 from django.db.models import Count
 from django.http import JsonResponse
+from django.views import View
 from django.views.generic.edit import FormView
 from django.utils.decorators import method_decorator
 from django.core.cache.backends.base import DEFAULT_TIMEOUT
@@ -33,23 +34,30 @@ def services(request):
     return render(request, 'raft/services.html', context=context)
 
 
-def estimate(request):
+class EstimateView(View):
+    template_name = 'raft/estimate.html'
     categories = [
         category for category in Category.objects.annotate(
             num_services=Count('service')
         ).order_by('-num_services')
     ]
-    EstimateFormset = formset_factory(
+    cap = len(categories)
+    form_class = formset_factory(
         form=EstimateForm,
-        extra=len(categories),
-        max_num=len(categories),
+        extra=cap,
+        max_num=cap,
         validate_max=True
     )
-    if request.method == 'POST':
-        formset = EstimateFormset(
-            request.POST,
-            initial=[{'model_id': category.id} for category in categories]
-        )
+    initial = [{'model_id': category.id} for category in categories]
+
+    def get(self, request, *args, **kwargs):
+        formset = self.form_class(initial=self.initial)
+        context = {'formset': formset}
+        return render(request, self.template_name, context)
+
+    def post(self, request, *args, **kwargs):
+        formset = self.form_class(request.POST, initial=self.initial)
+        context = {'formset': formset}
         if formset.is_valid():
             selections = [
                 form.cleaned_data['services']
@@ -58,26 +66,20 @@ def estimate(request):
             ids = [int(id) for selection in selections for id in selection]
             services = [Service.objects.get(id=int(id)) for id in ids]
             total = EstimateForm.sum_price(*services)
-            response = {
+            return JsonResponse({
                 'success': True,
                 'total': str(total),
                 'services': [service.name for service in services]
-            }
+            })
         else:
-            response = {
+            return JsonResponse({
                 'success': False,
                 'errors': {
                     form.model.id: form['services'].errors
                     for form in formset if form.errors
                 }
-            }
-        return JsonResponse(response)
-    elif request.method == 'GET':
-        formset = EstimateFormset(
-            initial=[{'model_id': category.id} for category in categories]
-        )
-    context = {'formset': formset}
-    return render(request, 'raft/estimate.html', context=context)
+            })
+        return render(request, self.template_name, context)
 
 
 class ContactView(FormView):
