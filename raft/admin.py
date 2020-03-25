@@ -3,7 +3,15 @@ from .models import Category, Service, Contact
 
 
 admin.site.register(Category)
-admin.site.register(Service)
+
+
+@admin.register(Service)
+class ServiceAdmin(admin.ModelAdmin):
+    list_display = ('name', 'price', 'category')
+    exclude = ('contacts',)
+
+    class Meta:
+        ordering = ('-category',)
 
 
 @admin.register(Contact)

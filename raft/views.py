@@ -1,3 +1,6 @@
+import json
+from decimal import Decimal, ROUND_HALF_EVEN
+from django.core.cache import cache
 from django.shortcuts import render
 from django.forms import formset_factory
 from django.db.models import Count
@@ -7,8 +10,11 @@ from django.views.generic.edit import FormView
 from django.utils.decorators import method_decorator
 from django.core.cache.backends.base import DEFAULT_TIMEOUT
 from django.views.decorators.cache import cache_page
+from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_POST
 from django.conf import settings
 from honeypot.decorators import check_honeypot
+from djmoney.contrib.exchange.models import convert_money
 from .models import Category, Service
 from .forms import EstimateForm, ContactForm
 from .index import slider, switcher
@@ -32,6 +38,31 @@ def services(request):
     )
     context = {'categories': categories}
     return render(request, 'raft/services.html', context=context)
+
+
+@csrf_exempt
+@require_POST
+def convert_currency(request):
+    services = Service.objects.all()
+    currency = json.loads(request.body).get('currency')
+    print(currency)
+    if currency == 'vnd':
+        response = {service.id: str(service.price) for service in services}
+    else:
+        response = {}
+        for service in services:
+            price = service.price
+            key = str(price)
+            if cache.get(key, default=None) is None:
+                conversion = convert_money(price, 'USD')
+                conversion.amount = Decimal((
+                    Decimal(conversion.amount).quantize(
+                        Decimal('1.'), rounding=ROUND_HALF_EVEN
+                    ) // 5
+                ) * 5)
+                cache.set(key, conversion, 24 * 3600)
+            response.update({service.id: str(cache.get(key))})
+    return JsonResponse(response)
 
 
 class EstimateView(View):

@@ -1,5 +1,6 @@
 {% extends "raft/main_area.html" %}
 {% load static %}
+{% load raft_extras %}
 {% block title %} Services {% endblock title %}
 {% block breadcrumb %}
 <li><span>Services</span></li>
@@ -12,6 +13,14 @@
       <hr class="uk-divider-small uk-text-center">
     </header>
 </section>
+<div uk-sticky="offset: 500; top: main">
+  <button id="toggle" type="button" class="uk-align-right uk-button uk-button-default uk-light uk-margin-right uk-padding-remove">
+    <div style="display: block ruby;">
+      <div id="vnd" class="toggler uk-card uk-card-small uk-card-primary uk-padding-small uk-padding-remove-vertical">VND </div>
+      <div id="usd" class="toggler uk-card uk-card-small uk-card-secondary  uk-padding-small uk-padding-remove-vertical"> USD</div>
+    </div>
+  </button>
+</div>
 {% for category in categories %}
 <section id="{{ category.short_name }}" class="uk-light uk-box-shadow-medium uk-section uk-section-secondary uk-padding-remove-top">
   <div class="uk-container">
@@ -33,7 +42,7 @@
                   </li>
                 </ul>
               </td>
-              <td>{% if service.price%}{{ service.price }}{% else %}FREE{% endif %}</td>
+              <td id="{{ service.id }}">{% if service.price%}{{ service.price }}{% else %}FREE{% endif %}</td>
             </tr>
             {% endfor %}
           </tbody>
@@ -49,3 +58,6 @@
 </section>
 {% endfor %}
 {% endblock area %}
+{% block body_js %}
+<script src="{% static 'raft/js/services.js'%}"></script>
+{% endblock body_js %}

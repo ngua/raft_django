@@ -11,6 +11,8 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 """
 
 import os
+import moneyed
+from moneyed.localization import _FORMATTER
 from django.utils.translation import gettext_lazy as _
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -35,6 +37,7 @@ INSTALLED_APPS = [
     'honeypot',
     'widget_tweaks',
     'djmoney',
+    'djmoney.contrib.exchange',
     'raft.apps.RaftConfig',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -111,21 +114,21 @@ REDIS_URI = os.environ.get('REDIS_URI')
 
 
 # Caching
-# CACHES = {
-#     'default': {
-#         'BACKEND': 'django_redis.cache.RedisCache',
-#         'LOCATION': REDIS_URI,
-#         'OPTIONS': {
-#             'CLIENT_CLASS': 'django_redis.client.DefaultClient'
-#         },
-#         'KEY_PREFIX': 'raft_django'
-#     }
-# }
 CACHES = {
     'default': {
-        'BACKEND': 'django.core.cache.backends.dummy.DummyCache',
+        'BACKEND': 'django_redis.cache.RedisCache',
+        'LOCATION': REDIS_URI,
+        'OPTIONS': {
+            'CLIENT_CLASS': 'django_redis.client.DefaultClient'
+        },
+        'KEY_PREFIX': 'raft_django'
     }
 }
+# CACHES = {
+#     'default': {
+#         'BACKEND': 'django.core.cache.backends.dummy.DummyCache',
+#     }
+# }
 
 CACHE_TTL = 60 * 15
 
@@ -142,6 +145,12 @@ LANGUAGE_CODE = 'en-us'
 LOCALE_PATHS = (
     os.path.join(BASE_DIR, 'locale/'),
 )
+
+CURRENCIES = ('VND', 'USD')
+BASE_CURRENCY = 'VND'
+EXCHANGE_BACKEND = 'djmoney.contrib.exchange.backends.FixerBackend'
+FIXER_ACCESS_KEY = os.environ.get('FIXER_KEY')
+_FORMATTER.add_sign_definition('default', moneyed.USD, prefix='$', suffix='')
 
 TIME_ZONE = 'Asia/Ho_Chi_Minh'
 
