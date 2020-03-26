@@ -1,0 +1,78 @@
+$bg-dark: #222;
+$bg-grey: #393;
+$fg-grey: #999;
+$light-grey: #ddd;
+$default-size: 14px;
+
+@mixin dark-bg {
+  background-color: $bg-dark;
+  color: white;
+  border-radius: 0;
+  border: none;
+}
+
+.choices__placeholder {
+  color: white;
+}
+
+.choices__list--multiple .choices__item {
+  @include dark-bg;
+
+  &.is-highlighted,
+  &.is-focused,
+  &.is-active {
+    @include dark-bg;
+  }
+}
+
+.choices__button {
+  background-color: $bg-dark;
+}
+
+.choices__inner {
+  display: inline-block;
+  vertical-align: top;
+  width: 90%;
+  background-color: $bg-grey;
+  padding: 7.5px 7.5px 3.75px;
+  border: 1px solid $light-grey;
+  border-radius: 2.5px;
+  font-size: $default-size;
+  min-height: 44px;
+  overflow: hidden;
+}
+
+.choices__input,
+.choices__input--cloned {
+  display: inline-block;
+  vertical-align: baseline;
+  background-color: $bg-grey;
+  color: $fg-grey;
+  font-size: $default-size;
+  margin-bottom: 5px;
+  border: 0;
+  border-radius: 0;
+  max-width: 100%;
+  padding: 4px 0 4px 2px;
+}
+
+.choices__list--dropdown {
+  visibility: hidden;
+  z-index: 1;
+  position: absolute;
+  width: 100%;
+  background-color: $bg-grey;
+  border: 1px solid $light-grey;
+  top: 100%;
+  margin-top: -1px;
+  border-bottom-left-radius: 2.5px;
+  border-bottom-right-radius: 2.5px;
+  overflow: hidden;
+  word-break: break-all;
+  will-change: visibility;
+
+  .choices__item--selectable.is-highlighted {
+    background-color: $fg-grey;
+    color: white;
+  }
+}

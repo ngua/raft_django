@@ -1,0 +1,23 @@
+{
+  "name": "scss",
+  "version": "1.0.0",
+  "description": "",
+  "main": "src",
+  "config": {
+      "src_dir": "src",
+      "dest_dir": "../static/raft/css"
+  },
+  "scripts": {
+    "scss:compile": "sass $npm_package_config_src_dir:$npm_package_config_dest_dir",
+    "scss:compile:watch": "sass --watch $npm_package_config_src_dir:$npm_package_config_dest_dir"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "sass": "^1.26.3"
+  },
+  "devDependencies": {
+    "stylelint": "^13.2.1",
+    "stylelint-config-standard": "^20.0.0"
+  }
+}

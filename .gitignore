@@ -3,3 +3,7 @@ __pycache__/
 raft/.vim/
 .vim/
 celerybeat*
+raft/static/raft/css/*
+!raft/static/raft/css/README.md
+raft/scss/node_modules/
+raft/scss/.style*

@@ -1,0 +1,110 @@
+@mixin fixed($top) {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: $top;
+}
+
+body {
+  min-height: 100vh;
+  background: #222;
+}
+
+hr.footer-divider {
+  border-top: 1px solid #333232;
+}
+
+.nav {
+  @include fixed(15px);
+
+  z-index: 99;
+}
+
+.icon {
+  filter: grayscale(50%);
+  opacity: 0.9;
+}
+
+.uk-subnav > .uk-active > a {
+  color: white;
+}
+
+.uk-sticky-placeholder {
+  height: 0 !important;
+}
+
+.top-wrap::before,
+.overlay-wrap::before {
+  @include fixed(0);
+
+  content: '';
+  z-index: 1;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.top-wrap-height {
+  height: 80vh;
+  min-height: 460px;
+  transition: height 0.25s;
+}
+
+.top-container {
+  z-index: 2;
+}
+
+.uk-logo img {
+  height: 38px;
+}
+
+.subtitle-text {
+  font-size: 1.2em;
+  opacity: 0.7;
+  font-weight: 300;
+}
+
+ul.checkbox {
+  list-style-type: none;
+}
+
+.toggle {
+  display: none;
+
+  &.visible {
+    display: block;
+  }
+}
+
+button#reload {
+  padding-left: 30px;
+}
+
+.lang {
+  border: 0;
+  padding: 0;
+  background: none;
+  display: inline-block;
+  filter: grayscale(70);
+  opacity: 0;
+  animation: fadeDisabled 2s;
+  animation-delay: 1s;
+  animation-fill-mode: forwards;
+
+  &[disabled] {
+    filter: none;
+    animation: fadeEnabled 2s;
+    animation-delay: 1s;
+    animation-fill-mode: forwards;
+  }
+}
+
+@keyframes fadeDisabled {
+  from { opacity: 0; }
+
+  to { opacity: 0.6; }
+}
+
+@keyframes fadeEnabled {
+  from { opacity: 0; }
+
+  to { opacity: 1; }
+}
