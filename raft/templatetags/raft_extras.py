@@ -13,15 +13,3 @@ def slice_url(url):
     if prefix not in ['en', 'vi']:
         return url
     return url[3:]
-
-
-@register.filter
-def vnd_to_usd(money):
-    key = str(money)
-    if cache.get(key, default=None) is None:
-        conversion = convert_money(money, 'USD')
-        conversion.amount = Decimal(
-            conversion.amount
-        ).quantize(Decimal('1.'), rounding=ROUND_HALF_EVEN)
-        cache.set(key, conversion, 24 * 3600)
-    return cache.get(key)

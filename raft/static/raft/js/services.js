@@ -5,7 +5,7 @@ let current = 'vnd';
 toggle.addEventListener('click', () => {
   current = current === 'vnd' ? 'usd' : 'vnd'
   Array.prototype.forEach.call(togglers, toggler => toggleOnOff(toggler));
-  fetch(`${document.referrer}/convert/`, {
+  fetch(`${window.origin}/convert/`, {
     method: 'POST',
     body: JSON.stringify({'currency': current})
   })

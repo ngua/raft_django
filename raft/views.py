@@ -45,7 +45,6 @@ def services(request):
 def convert_currency(request):
     services = Service.objects.all()
     currency = json.loads(request.body).get('currency')
-    print(currency)
     if currency == 'vnd':
         response = {service.id: str(service.price) for service in services}
     else:
