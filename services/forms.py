@@ -11,7 +11,7 @@ class EstimateForm(forms.Form):
         super().__init__(*args, **kwargs)
         choices = tuple(
             (service.id, service.name)
-            for service in self.model.service_set.all()
+            for service in self.model.service_set.filter(price__gt=0)
         )
         self.fields['services'] = MultipleChoiceField(
             choices=choices,

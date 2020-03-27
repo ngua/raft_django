@@ -1,18 +1,27 @@
 from django.shortcuts import render
 from django.http import JsonResponse
 from django.forms import formset_factory
-from django.db.models import Count
+from django.db.models import Count, Q
 from django.views import View
+from django.conf import settings
+from django.core.cache.backends.base import DEFAULT_TIMEOUT
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_page
 from .models import Category, Service
 from .forms import EstimateForm
 
 
+CACHE_TTL = getattr(settings, 'CACHE_TTL', DEFAULT_TIMEOUT)
+
+
+@method_decorator(cache_page(CACHE_TTL), name='dispatch')
 class EstimateView(View):
     template_name = 'services/estimate.html'
     categories = [
         category for category in Category.objects.annotate(
-            num_services=Count('service')
-        ).order_by('-num_services')
+            num_services=Count(
+                'service', filter=Q(service__price__gt=0)
+            )).exclude(num_services__lt=1).order_by('-num_services')
     ]
     cap = len(categories)
     form_class = formset_factory(
@@ -55,6 +64,7 @@ class EstimateView(View):
         return render(request, self.template_name, context)
 
 
+@cache_page(CACHE_TTL)
 def services(request):
     categories = list(Category.objects.all())
     categories = sorted(

@@ -115,21 +115,21 @@ REDIS_URI = os.environ.get('REDIS_URI')
 
 
 # Caching
-CACHES = {
-    'default': {
-        'BACKEND': 'django_redis.cache.RedisCache',
-        'LOCATION': REDIS_URI,
-        'OPTIONS': {
-            'CLIENT_CLASS': 'django_redis.client.DefaultClient'
-        },
-        'KEY_PREFIX': 'raft_django'
-    }
-}
 # CACHES = {
 #     'default': {
-#         'BACKEND': 'django.core.cache.backends.dummy.DummyCache',
+#         'BACKEND': 'django_redis.cache.RedisCache',
+#         'LOCATION': REDIS_URI,
+#         'OPTIONS': {
+#             'CLIENT_CLASS': 'django_redis.client.DefaultClient'
+#         },
+#         'KEY_PREFIX': 'raft_django'
 #     }
 # }
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.dummy.DummyCache',
+    }
+}
 
 CACHE_TTL = 60 * 15
 
