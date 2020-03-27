@@ -8,8 +8,8 @@
     <meta name="keywords" content="web, tech, saigon, hcm, linux">
     <meta name="copyright" content="tnhh raft">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/uikit@latest/dist/css/uikit.min.css">
-    <link rel="stylesheet" type="text/css" href="{% static 'raft/css/main.css' %}">
     {% block head %}{% endblock head %}
+    <link rel="stylesheet" type="text/css" href="{% static 'styles/css/app.css' %}">
     <title>{% block title %} {% endblock %} | RAFT </title>
   </head>
   <body>
@@ -19,7 +19,7 @@
           <nav class="uk-navbar uk-navbar-container uk-navbar-transparent" data-uk-navbar>
             <div class="uk-navbar-left">
               <div class="uk-navbar-item uk-padding-remove-horizontal">
-                <a class="uk-logo" href="{% url 'index' %}"><img data-src="{% static 'raft/img/new_brand.svg' %}" alt="Raft" uk-img> <code>RAFT</code> </a>
+                <a class="uk-logo" href="{% url 'index' %}"><img data-src="{% static 'img/new_brand.svg' %}" alt="Raft" uk-img> <code>RAFT</code> </a>
               </div>
             </div>
             <div class="uk-navbar-right">
@@ -36,7 +36,7 @@
                     <input name="next" type="hidden" value="{{ request.get_full_path|slice_url }}">
                     <input name="language" type="hidden" value="{{ language.code }}">
                 </form>
-                <li><button type="submit" form="form_{{ language.code}}" class="lang" {% if language.code == LANGUAGE_CODE %}disabled{% endif %}><img class="uk-animation-fade uk-align-bottom icon uk-margin-left" src="{% static 'raft/img/'|add:language.code|add:'.svg' %}" alt="{{ language.code }}" uk-svg width="20" height="20"></button></li>
+                <li><button type="submit" form="form_{{ language.code}}" class="lang" {% if language.code == LANGUAGE_CODE %}disabled{% endif %}><img class="uk-animation-fade uk-align-bottom icon uk-margin-left" src="{% static 'img/'|add:language.code|add:'.svg' %}" alt="{{ language.code }}" uk-svg width="20" height="20"></button></li>
                 {% endfor %}
               </ul>
             </div>
@@ -89,7 +89,7 @@
             </div>
         </div>
         <div class="uk-text-center uk-padding uk-padding-remove-horizontal">
-            <span class="uk-text-small uk-text-muted">Powered by Python</span><img class="uk-margin-small-left uk-preserve" src="{% static 'raft/img/py.svg' %}" alt="py" height="15" width="15" uk-svg>
+            <span class="uk-text-small uk-text-muted">Powered by Python</span><img class="uk-margin-small-left uk-preserve" src="{% static 'img/py.svg' %}" alt="py" height="15" width="15" uk-svg>
             <div>
                 <span class="uk-text-small uk-text-muted">Icons made by <a href="https://www.flaticon.com/authors/smashicons" title="Smashicons">Smashicons</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></span>
             </div>
@@ -97,7 +97,7 @@
     </footer>
     <script src="https://cdn.jsdelivr.net/npm/uikit@latest/dist/js/uikit.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/uikit@latest/dist/js/uikit-icons.min.js"></script>
-    <script src="{% static 'raft/js/main.js' %}"></script>
+    <script src="{% static 'js/main.js' %}"></script>
     {% block body_js %}{% endblock body_js %}
   </body>
 </html>
