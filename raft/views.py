@@ -15,15 +15,22 @@ from djmoney.contrib.exchange.models import convert_money
 from services.models import Service
 from .forms import ContactForm
 from .index import slider, switcher
+from .about import about_us
 
 
 CACHE_TTL = getattr(settings, 'CACHE_TTL', DEFAULT_TIMEOUT)
 
 
-# @cache_page(CACHE_TTL)
+@cache_page(CACHE_TTL)
 def index(request):
     context = {'switcher': switcher, 'slider': slider}
     return render(request, 'raft/index.html', context=context)
+
+
+# @cache_page(CACHE_TTL)
+def about(request):
+    context = {'content': about_us}
+    return render(request, 'raft/about.html', context=context)
 
 
 @csrf_exempt
@@ -50,6 +57,7 @@ def convert_currency(request):
     return JsonResponse(response)
 
 
+@method_decorator(cache_page(CACHE_TTL), name='dispatch')
 class ContactView(FormView):
     template_name = 'raft/contact.html'
     form_class = ContactForm

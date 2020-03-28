@@ -57,6 +57,13 @@
                 <li><a href="#">{% trans 'About' %}</a></li>
                 <li><a href="{% url 'contact' %}">{% trans 'Contact' %}</a></li>
             </ul>
+            {% for language in languages %}
+            <form action="{% url 'set_language' %}" id="form_{{ language.code}}" class="uk-animation-fade" method="POST" style="display: inline ruby">{% csrf_token %}
+              <input name="next" type="hidden" value="{{ request.get_full_path|slice_url }}">
+              <input name="language" type="hidden" value="{{ language.code }}">
+            </form>
+            <button type="submit" form="form_{{ language.code}}" class="lang" {% if language.code == LANGUAGE_CODE %}disabled{% endif %}><img class="uk-animation-fade uk-align-bottom icon uk-margin-left" src="{% static 'img/'|add:language.code|add:'.svg' %}" alt="{{ language.code }}" uk-svg width="20" height="20"></button>
+            {% endfor %}
           </li>
         </ul>
         <h5>CTY TNHH RAFT</h5>
