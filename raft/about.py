@@ -30,22 +30,27 @@ about_us = {
             {
                 'title': _('Get in touch'),
                 'description': _("Contact us via email or the link in the navigation bar. Feel free to add as much detail as you'd like."),
+                'img': 'about_contact'
             },
             {
                 'title': _('Receive a price and time estimate'),
                 'description': _("We'll get back to you and offer an estimate of the time to complete your project as well as the total cost. We can adjust and negotiate at this stage, and add and subtract services until you're satisfied with the plan."),
+                'img': 'about_quote'
             },
             {
                 'title': _('Sign a contract'),
                 'description': _("At this stage, you'll sign a contract with RAFT and pay the deposit to begin work on your application."),
+                'img': 'about_contract'
             },
             {
                 'title': _('Deployment'),
                 'description': _("When development has finished on your application, we'll deploy it based on the agreed contractual terms and after receiving the final payment"),
+                'img': 'about_deploy'
             },
             {
                 'title': _('More questions?'),
                 'description': _("Feel free to reach out at any time to have RAFT answer your questions."),
+                'img': 'about_faq'
             },
         ]
     }
