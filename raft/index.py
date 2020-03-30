@@ -80,7 +80,7 @@ switcher = [
     {
         'title': _('Web Apps'),
         'desc': _('Reach New Customers and Expand Your Business'),
-        'img': 'langs.png',
+        'img': 'langs.svg',
         'href': 'web',
         'sub': [
             {
@@ -104,7 +104,7 @@ switcher = [
     {
         'title': _('Deployment'),
         'desc': _('Reliable and Scalable Builds'),
-        'img': 'deploy.png',
+        'img': 'deploy.svg',
         'href': 'deployment',
         'sub': [
             {
@@ -128,7 +128,7 @@ switcher = [
     {
         'title': _('...And More'),
         'desc': _('More Services to Meet Your Needs'),
-        'img': 'other.png',
+        'img': 'other.svg',
         'href': 'additional',
         'sub': [
             {

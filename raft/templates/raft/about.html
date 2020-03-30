@@ -23,16 +23,16 @@
 {% with content.mission as mission %}
 <section id="{{ mission.id }}" class="uk-section uk-section-muted">
   <div class="uk-container uk-container-large">
-    <div class="uk-grid uk-child-width-1-1@m " uk-grid>
+    <div class="uk-grid uk-child-width-1-1@m" data-uk-grid data-uk-scrollspy="target: > div; cls: uk-animation-slide-right-medium" uk-grid>
       <h1>
         {{ mission.title }}
       </h1>
-      <hr class="uk-divider-small uk-padding-remove-vertical">
-      <div class="uk-grid uk-text-center uk-child-width-1-1@s  uk-child-width-1-3@m uk-grid-large uk-grid-match" uk-grid>
+      <hr class="uk-divider-small uk-margin">
+      <div class="uk-grid uk-text-center uk-margin-remove uk-child-width-1-1@s  uk-child-width-1-3@m uk-grid-large uk-grid-match" uk-grid>
         {% for item in mission.content %}
         <div>
           <div class="uk-card uk-card-small uk-card-secondary uk-card-body">
-            <div class="uk-inline uk-overflow-hidden">
+            <div class="uk-inline uk-overflow-hidden uk-animation-fade">
               <img data-src="{% static 'raft/img/'|add:item.img %}" class="uk-preserve-width" height=300 width=500 alt="" uk-img>
               <div class="uk-overlay uk-overlay-primary uk-position-cover uk-light">
                 <h3>{{ item.title }}</h3>
@@ -57,13 +57,10 @@
 {% with content.steps as steps %}
 <section id="{{ steps.id }}" class="uk-section uk-section-muted">
   <div class="uk-container uk-container-large uk-dark">
-    <div class="uk-grid uk-child-width-1-1@m " uk-grid>
-      <div class="totop">
-        <h1>
-          {{ steps.title }}
-        </h1>
-        <a href="#main" uk-totop uk-scroll></a>
-      </div>
+    <div class="uk-grid uk-child-width-1-1@m " data-uk-grid data-uk-scrollspy="target: > div; cls: uk-animation-slide-left-medium" uk-grid>
+      <h1>
+        {{ steps.title }}
+      </h1>
       <hr class="uk-divider-small uk-padding-remove-vertical">
       <div class="uk-position-relative uk-visible-toggle" data-uk-switcher="easing: cubic-bezier(.16,.75,.47,1)" uk-switcher>
         <ul class="uk-tab" data-uk-switcher="connect: .uk-switcher; animation: uk-animation-fade">
@@ -85,7 +82,7 @@
                   <h1>{{ step.title }}</h1>
                 </div>
                 <div>
-                  <p>{{ step.description }}<p>
+                  <p>{{ step.description|safe}}<p>
                 </div>
                 <div>
                   <img class="about-img" data-src="{% static 'raft/img/'|add:step.img|add:'.svg' %}" height="200" width="200" alt="" uk-img>

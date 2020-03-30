@@ -11,6 +11,7 @@
       <h1 class="uk-heading">Our Services</h1>
       <hr class="uk-divider-small uk-text-center">
     </header>
+  </div>
 </section>
 <div uk-sticky="offset: 500; top: main">
   <button id="toggle" type="button" class="uk-align-right uk-button uk-button-default uk-light uk-margin-right uk-padding-remove">
@@ -23,10 +24,10 @@
 {% for category in categories %}
 <section id="{{ category.short_name }}" class="uk-light uk-box-shadow-medium uk-section uk-section-secondary uk-padding-remove-top">
   <div class="uk-container">
-    <div class="uk-grid uk-flex-middle uk-child-width-1-2@l">
+    <div class="uk-grid uk-flex-middle uk-child-width-1-2@l" data-uk-grid data-uk-scrollspy="target: > div; cls: uk-animation-slide-{% if forloop.counter|divisibleby:2 %}right{% else %}left{% endif %}-medium" uk-grid>
       <div>
         <h2 class="uk-header">{{ category.name }}</h2>
-        <img class="uk-align-center" data-src="{% static 'raft/img/'|add:category.picture_path %}" width="300" height="300" alt="{{ category.name }}" uk-img>
+        <img class="uk-align-center" data-src="{% static 'services/img/'|add:category.picture_path|add:'.svg' %}" width="300" height="300" alt="{{ category.name }}" uk-img>
       </div>
       <div class="uk-first-column">
         <table class="uk-table uk-table-divider uk-table-hover">
