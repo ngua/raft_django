@@ -34,12 +34,15 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'webpack_loader',
+    'channels',
     'honeypot',
     'widget_tweaks',
     'djmoney',
     'djmoney.contrib.exchange',
     'raft.apps.RaftConfig',
     'services.apps.ServicesConfig',
+    'chat.apps.ChatConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -60,6 +63,7 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'raft_django.urls'
+ASGI_APPLICATION = 'raft_django.routing.application'
 
 TEMPLATES = [
     {
@@ -76,6 +80,14 @@ TEMPLATES = [
         },
     },
 ]
+
+
+WEBPACK_LOADER = {
+    'DEFAULT': {
+        'BUNDLE_DIR_NAME': 'bundles/',
+        'STATS_FILE': os.path.join(BASE_DIR, 'static', 'webpack-stats.json'),
+    }
+}
 
 WSGI_APPLICATION = 'raft_django.wsgi.application'
 

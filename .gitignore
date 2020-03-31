@@ -7,3 +7,6 @@ static/styles/css/*
 !static/styles/css/.readme.md
 static/node_modules/
 static/.stylelint*
+static/package-lock.json
+static/webpack-stats.json
+static/bundles

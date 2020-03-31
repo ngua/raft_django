@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load static i18n %}
+{% load render_bundle from webpack_loader %}
 {% block title %}HOME{% endblock %}
 {% block content %}
 <div class="uk-cover-container uk-light uk-flex uk-flex-middle top-wrap-height">
@@ -15,6 +16,9 @@
   <div class="uk-position-bottom-center uk-position-medium uk-position-z-index uk-text-center">
     <a href="#services" data-uk-scroll="duration: 500" data-uk-icon="icon: arrow-down; ratio: 2"></a>
   </div>
+</div>
+<div id="chat" uk-sticky="offset: 700; top: main; animation: uk-slide-top">
+  {% render_bundle 'main' %}
 </div>
 <section id="services" class="uk-section uk-section-secondary uk-padding-remove-top">
   <div class="uk-container">

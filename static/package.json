@@ -1,23 +1,37 @@
 {
-  "name": "scss",
-  "version": "1.0.0",
-  "description": "",
-  "main": "styles",
-  "config": {
-    "src": "styles/scss/app.scss",
-    "dest": "styles/css/app.css"
-  },
-  "scripts": {
-    "scss:compile": "sass $npm_package_config_src $npm_package_config_dest",
-    "scss:compile:watch": "sass --watch $npm_package_config_src $npm_package_config_dest"
-  },
-  "author": "",
-  "license": "ISC",
-  "dependencies": {
-    "sass": "^1.26.3"
-  },
-  "devDependencies": {
-    "stylelint": "^13.2.1",
-    "stylelint-config-standard": "^20.0.0"
-  }
+    "name": "scss",
+    "version": "1.0.0",
+    "description": "",
+    "main": "styles",
+    "config": {
+        "src": "styles/scss/app.scss",
+        "dest": "styles/css/app.css"
+    },
+    "scripts": {
+        "scss:compile": "sass $npm_package_config_src $npm_package_config_dest",
+        "scss:compile:watch": "sass --watch $npm_package_config_src $npm_package_config_dest",
+        "webpack:compile:prod": "webpack --mode production",
+        "webpack:compile:dev": "webpack --mode development",
+        "webpack:compile:watch:prod": "webpack --watch --mode production",
+        "webpack:compile:watch:dev": "webpack --watch --mode development"
+    },
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+        "sass": "^1.26.3"
+    },
+    "devDependencies": {
+        "@babel/core": "^7.9.0",
+        "@babel/preset-env": "^7.9.0",
+        "@babel/preset-react": "^7.9.4",
+        "babel-loader": "^8.1.0",
+        "react": "^16.13.1",
+        "react-dom": "^16.13.1",
+        "stylelint": "^13.2.1",
+        "stylelint-config-standard": "^20.0.0",
+        "uikit": "^3.3.7",
+        "webpack": "^4.42.1",
+        "webpack-bundle-tracker": "^0.4.3",
+        "webpack-cli": "^3.3.11"
+    }
 }
