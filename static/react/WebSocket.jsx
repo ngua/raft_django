@@ -16,8 +16,9 @@ class WebSocketService {
     this.socketRef = null;
   }
 
-  connect() {
-    const path = config.API_PATH;
+  connect(uid) {
+    const path = config.API_PATH + uid + '/'
+    console.log(path)
     this.socketRef = new WebSocket(path);
 
     this.socketRef.onmessage = e => {
@@ -29,7 +30,7 @@ class WebSocketService {
     };
 
     this.socketRef.onclose = () => {
-      this.connect();
+      this.connect(uid);
     };
 
   }
@@ -49,10 +50,6 @@ class WebSocketService {
 
   }
 
-  initChatUser(uid) {
-    this.sendMessage({command: 'init_chat', uid: uid});
-  }
-
   fetchMessages(uid) {
     this.sendMessage({command: 'list_messages', uid: uid});
   }
@@ -61,14 +58,13 @@ class WebSocketService {
     this.sendMessage({command: 'new_message', from: message.from, text: message.text});
   }
 
-  addCallbacks(messagesCallback, newMessageCallback) {
+  bindCallbacks(messagesCallback, newMessageCallback) {
     this.callbacks['messages'] = messagesCallback;
     this.callbacks['new_message'] = newMessageCallback;
   }
 
   sendMessage(data) {
     try {
-      console.log({...data})
       this.socketRef.send(JSON.stringify({...data}))
     }
     catch(error){

@@ -6,13 +6,22 @@ $screen-lg-min: 992px;
   }
 }
 
-@mixin message($bg, $fg) {
-  border-radius: 10px;
-  padding: 5px;
-  margin-bottom: 1px;
-  display: table;
-  background-color: $bg;
-  color: $fg;
+@mixin chat($bg, $fg, $align) {
+  justify-content: $align;
+
+  p {
+    border-radius: 10px;
+    padding: 5px;
+    margin-bottom: 1px;
+    display: table;
+    background-color: $bg;
+    color: $fg;
+  }
+
+  small {
+    text-align: $align;
+    margin-top: 4px;
+  }
 }
 
 .chat-box {
@@ -27,16 +36,6 @@ $screen-lg-min: 992px;
   }
 }
 
-p {
-  &.admin {
-    @include message(slategray, #000);
-  }
-
-  &.user {
-    @include message(dodgerblue, #fff);
-  }
-}
-
 .chat-messages {
   margin-bottom: 10px;
   list-style: none;
@@ -45,11 +44,11 @@ p {
     display: grid;
 
     &.admin {
-      justify-content: left;
+      @include chat(slategray, #000, left);
     }
 
     &.user {
-      justify-content: right;
+      @include chat(dodgerblue, #fff, right);
     }
   }
 }

@@ -5,6 +5,11 @@ from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
 
 
+class Room(models.Model):
+    room_id = models.UUIDField(null=False, editable=False, default=uuid4)
+    chat_users = models.ManyToManyField('ChatUser')
+
+
 class Message(models.Model):
     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
     object_id = models.PositiveIntegerField()

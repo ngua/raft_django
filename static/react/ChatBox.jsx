@@ -13,8 +13,7 @@ class ChatBox extends React.Component {
       messages: []
     };
     this.waitForSocketConnection(() => {
-      WebSocketInstance.initChatUser(this.props.currentChatUser);
-      WebSocketInstance.addCallbacks(this.setMessages.bind(this), this.addMessage.bind(this));
+      WebSocketInstance.bindCallbacks(this.setMessages.bind(this), this.addMessage.bind(this));
       WebSocketInstance.fetchMessages(this.props.currentChatUser);
     });
     this.closeChatBox = this.closeChatBox.bind(this);
@@ -71,12 +70,12 @@ class ChatBox extends React.Component {
   renderMessages(messages) {
     const currentChatUser = this.props.currentChatUser;
     return messages.map((message, i) => {
-      const time = message.time.slice(0, 5);
+      const time = message.time;
       const userClass = message.author === currentChatUser ? "user" : "admin";
       return (
-        <li key={i} className={`chat-messages ${userClass} uk-animation-fade`}>
+        <li key={i} className="chat-messages uk-animation-fade">
           <div className={`${userClass}`}>
-            <p className={userClass}> {message.text} </p>
+            <p> {message.text} </p>
             <small>{time}</small>
           </div>
         </li>

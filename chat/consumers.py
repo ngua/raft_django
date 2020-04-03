@@ -1,27 +1,24 @@
 import json
+from uuid import UUID
+from time import strftime
 from channels.generic.websocket import AsyncWebsocketConsumer
 from channels.db import database_sync_to_async
-from .models import ChatUser, Message
+from .models import ChatUser, Message, Room
 
 
 class CustomerChatConsumer(AsyncWebsocketConsumer):
-    async def init_chat(self, data):
-        uid = data['uid']
-        chat_user, _ = await self.get_chat_user(uid)
-        response = {
-            'command': 'init_chat',
-        }
-        await self.send(json.dumps(response))
-
     async def connect(self):
-        self.room_name = 'test'
+        uid = await self.get_uid(self.scope['url_route']['kwargs']['uid'])
+        chat_user, _ = await self.get_chat_user(uid)
+        user_room, _ = await self.get_room(uid)
+        self.room_name = f'test_{uid}'
+        await self.add_user(user_room, chat_user)
         self.room_group_name = f'chat_{self.room_name}'
 
         await self.channel_layer.group_add(
             self.room_group_name,
             self.channel_name
         )
-
         await self.accept()
 
     async def disconnect(self, close_code):
@@ -50,7 +47,7 @@ class CustomerChatConsumer(AsyncWebsocketConsumer):
             'message': {
                 'text': message.text,
                 'author': await self.get_author(message),
-                'time': message.time_stamp.isoformat()
+                'time': strftime('%H:%m')
             }
         }
         await self.channel_layer.group_send(
@@ -62,7 +59,6 @@ class CustomerChatConsumer(AsyncWebsocketConsumer):
 
     async def receive(self, text_data):
         commands = {
-            'init_chat': self.init_chat,
             'list_messages': self.list_messages,
             'new_message': self.new_message
         }
@@ -73,6 +69,22 @@ class CustomerChatConsumer(AsyncWebsocketConsumer):
     async def chat_message(self, event):
         message = event['message']
         await self.send(text_data=json.dumps(message))
+
+    async def get_uid(self, uid):
+        try:
+            uid = UUID(uid, version=4)
+            return uid
+        except ValueError:
+            pass
+
+    @database_sync_to_async
+    def get_room(self, uid):
+        return Room.objects.get_or_create(room_id=uid)
+
+    @database_sync_to_async
+    def add_user(self, room, chat_user):
+        if chat_user not in room.chat_users.all():
+            room.chat_users.add(chat_user)
 
     @database_sync_to_async
     def get_author(self, message):

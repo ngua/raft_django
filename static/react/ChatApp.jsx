@@ -19,9 +19,11 @@ class ChatApp extends React.Component {
   handleOpen(uid) {
     this.setState((state) => {
       return {
-        active: true, uid: state.uid === '' ? uid : state.uid}
+        active: true, uid:
+        state.uid === '' ? uid : state.uid
+      }
     },() => {
-      WebSocketInstance.connect();
+      WebSocketInstance.connect(uid);
       console.log(this.state);
     });
   }
