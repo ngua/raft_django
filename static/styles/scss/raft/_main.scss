@@ -78,35 +78,24 @@ button#reload {
   padding-left: 30px;
 }
 
-.lang {
-  border: 0;
-  padding: 0;
-  background: none;
-  display: inline-block;
-  filter: grayscale(70);
-  opacity: 0;
-  animation: fadeDisabled 2s;
-  animation-delay: 1s;
-  animation-fill-mode: forwards;
-
-  &[disabled] {
-    filter: none;
-    animation: fadeEnabled 2s;
-    animation-delay: 1s;
-    animation-fill-mode: forwards;
+li {
+  &.lang {
+    margin-top: 25px;
   }
 }
 
-@keyframes fadeDisabled {
-  from { opacity: 0; }
+button {
+  &.lang {
+    border: 0;
+    padding: 0;
+    background: none;
+    display: inline-block;
+    filter: grayscale(70);
 
-  to { opacity: 0.6; }
-}
-
-@keyframes fadeEnabled {
-  from { opacity: 0; }
-
-  to { opacity: 1; }
+    &[disabled] {
+      filter: none;
+    }
+  }
 }
 
 .top {

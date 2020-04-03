@@ -1,0 +1,72 @@
+$screen-lg-min: 992px;
+
+@mixin lg {
+  @media (min-width: #{$screen-lg-min}) {
+    @content;
+  }
+}
+
+@mixin message($bg, $fg) {
+  border-radius: 10px;
+  padding: 5px;
+  margin-bottom: 1px;
+  display: table;
+  background-color: $bg;
+  color: $fg;
+}
+
+.chat-box {
+  border: 1px solid dodgerblue;
+  padding-top: 15px;
+  padding-right: 30px;
+  display: block;
+  width: 100%;
+
+  @include lg {
+    margin-right: 15px;
+  }
+}
+
+p {
+  &.admin {
+    @include message(slategray, #000);
+  }
+
+  &.user {
+    @include message(dodgerblue, #fff);
+  }
+}
+
+.chat-messages {
+  margin-bottom: 10px;
+  list-style: none;
+
+  div {
+    display: grid;
+
+    &.admin {
+      justify-content: left;
+    }
+
+    &.user {
+      justify-content: right;
+    }
+  }
+}
+
+.chat-container {
+  padding-left: 0;
+  padding-right: 0;
+  margin: 0;
+}
+
+#chat {
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  z-index: 999;
+}
+
+.close-chat {
+  margin-bottom: 30px;
+}

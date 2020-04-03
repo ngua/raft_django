@@ -27,7 +27,7 @@ def index(request):
     return render(request, 'raft/index.html', context=context)
 
 
-# @cache_page(CACHE_TTL)
+@cache_page(CACHE_TTL)
 def about(request):
     context = {'content': about_us}
     return render(request, 'raft/about.html', context=context)

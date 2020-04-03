@@ -9,7 +9,7 @@ module.exports = {
 
   output: {
     path: path.resolve('./bundles/'),
-    filename: '[name]-[hash].js',
+    filename: '[name].js',
   },
 
   plugins: [
@@ -26,8 +26,16 @@ module.exports = {
              loader: 'babel-loader'
            }
         ]
+      },
+      {
+        test: /\.s[ac]ss$/i,
+        use: [
+          'style-loader',
+          'css-loader',
+          'sass-loader'
+        ]
       }
-    ],
+    ]
   },
 
   resolve: {

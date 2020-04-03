@@ -63,6 +63,19 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'raft_django.urls'
+
+# Redis for caching, channels, celery taskbroker
+REDIS_URI = os.environ.get('REDIS_URI')
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [("127.0.0.1", 6379)],
+        },
+    },
+}
+
+
 ASGI_APPLICATION = 'raft_django.routing.application'
 
 TEMPLATES = [
@@ -121,9 +134,6 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
-
-# Redis for caching and as celery taskbroker
-REDIS_URI = os.environ.get('REDIS_URI')
 
 
 # Caching

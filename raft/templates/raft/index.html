@@ -17,24 +17,20 @@
     <a href="#services" data-uk-scroll="duration: 500" data-uk-icon="icon: arrow-down; ratio: 2"></a>
   </div>
 </div>
-<div id="chat" uk-sticky="offset: 700; top: main; animation: uk-slide-top">
+<div id="chat">
   {% render_bundle 'main' %}
 </div>
 <section id="services" class="uk-section uk-section-secondary uk-padding-remove-top">
-  <div class="uk-container">
-    <div class="uk-section uk-section-small uk-padding-remove-top">
-      <div class="uk-container uk-container-xsmall uk-text-center uk-section uk-padding-remove-top uk-padding-remove-bottom">
-        <h4 class="uk-text-primary uk-padding-small">{% trans 'OUR SERVICES' %}</h4>
+  <div class="uk-container uk-container-medium uk-section uk-padding-remove-top uk-padding-remove-bottom">
+    <h4 class="uk-text-primary uk-padding-small uk-text-center ">{% trans 'OUR SERVICES' %}</h4>
+    <hr class="uk-divider-small uk-text-center">
+    <ul class="uk-subnav uk-flex uk-flex-center" data-uk-switcher="connect: .uk-switcher; animation: uk-animation-fade">
+      {% for item in switcher %}
+      <div class="uk-margin-small-top">
+        <li><a class="uk-button uk-button-default" href="#">{{ item.title }}</a></li>
       </div>
-      <hr class="uk-divider-small uk-text-center">
-      <ul class="uk-subnav uk-flex uk-flex-center" data-uk-switcher="connect: .uk-switcher; animation: uk-animation-fade">
-        {% for item in switcher %}
-        <div class="uk-margin-small-top">
-          <li><a class="uk-button uk-button-default" href="#">{{ item.title }}</a></li>
-        </div>
-        {% endfor %}
-      </ul>
-    </div>
+      {% endfor %}
+    </ul>
     <ul class="uk-switcher uk-margin">
       {% for item in switcher %}
       <li>
