@@ -95,4 +95,6 @@
     </div>
   </section>
 </div>
+{{ chat_uid|json_script:'session-uid'}}
+{{ chat_limit|json_script:'chat-limit'}}
 {% endblock content %}

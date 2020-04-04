@@ -1,6 +1,3 @@
-import config from './config';
-
-
 class WebSocketService {
   static instance = null;
   callbacks = {};
@@ -17,8 +14,7 @@ class WebSocketService {
   }
 
   connect(uid) {
-    const path = config.API_PATH + uid + '/'
-    console.log(path)
+    const path = `ws://${window.location.host}/ws/chat/${uid}/`
     this.socketRef = new WebSocket(path);
 
     this.socketRef.onmessage = e => {
@@ -26,7 +22,8 @@ class WebSocketService {
     };
 
     this.socketRef.onerror = e => {
-      console.log(e.message);
+      console.log(e);
+      this.socketDisplayError();
     };
 
     this.socketRef.onclose = () => {
@@ -34,6 +31,11 @@ class WebSocketService {
     };
 
   }
+
+  socketDisplayError() {
+    console.log('error');
+  }
+
   socketNewMessage(data){
     const parsedData = JSON.parse(data);
     const command = parsedData.command;
@@ -42,7 +44,7 @@ class WebSocketService {
       return;
     }
 
-    if (command === 'list_messages') {
+    if (command === 'messages') {
       this.callbacks[command](parsedData.messages);
     } else if (command === 'new_message') {
       this.callbacks[command](parsedData.message);
@@ -50,8 +52,8 @@ class WebSocketService {
 
   }
 
-  fetchMessages(uid) {
-    this.sendMessage({command: 'list_messages', uid: uid});
+  fetchMessages() {
+    this.sendMessage({command: 'list_messages'});
   }
 
   newChatMessage(message) {
@@ -67,7 +69,7 @@ class WebSocketService {
     try {
       this.socketRef.send(JSON.stringify({...data}))
     }
-    catch(error){
+    catch(error) {
       console.log(`Error: ${error}`);
     }
   }
@@ -82,17 +84,15 @@ class WebSocketService {
     setTimeout(
       () => {
         if(socket.readyState === 1){
-          console.log("Connection");
+          console.log("Connected");
           if(callback != null){
             callback();
           }
           return;
+        } else {
+          console.log("Waiting to connect...");
         }
-        else{
-          console.log("Wait for connection..");
-          recursion(callback);
-        }
-      }, 1);
+      }, 100);
   }
 
 }

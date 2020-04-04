@@ -1,5 +1,4 @@
 import React from 'react';
-import { v4 as uuidv4 } from 'uuid';
 import ChatButton from './ChatButton';
 import ChatBox from './ChatBox';
 import WebSocketInstance from './WebSocket';
@@ -10,21 +9,20 @@ class ChatApp extends React.Component {
     super(props);
     this.state = {
       active: false,
-      uid: ''
+      chatUid: ''
     };
     this.handleOpen = this.handleOpen.bind(this);
     this.handleClose = this.handleClose.bind(this);
   }
 
-  handleOpen(uid) {
+  handleOpen(chatUid) {
     this.setState((state) => {
       return {
-        active: true, uid:
-        state.uid === '' ? uid : state.uid
+        active: true,
+        chatUid: state.chatUid === '' ? chatUid : state.chatUid
       }
     },() => {
-      WebSocketInstance.connect(uid);
-      console.log(this.state);
+      WebSocketInstance.connect(chatUid);
     });
   }
 
@@ -32,17 +30,16 @@ class ChatApp extends React.Component {
     this.setState({
       active: false
     })
-    console.log(this.state.uid);
   }
 
   render() {
-    const uid = this.state.uid;
+    const chatUid = this.state.chatUid;
     return (
       <div className="uk-animation-slide-top">
         { this.state.active ? (
           <ChatBox
             closeChatBox={this.handleClose}
-            currentChatUser={uid}
+            currentChatUser={chatUid}
           />
         ) : (
           <ChatButton

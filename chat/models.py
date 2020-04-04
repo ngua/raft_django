@@ -7,7 +7,17 @@ from django.contrib.contenttypes.models import ContentType
 
 class Room(models.Model):
     room_id = models.UUIDField(null=False, editable=False, default=uuid4)
+    last_active = models.TimeField(auto_now=True)
     chat_users = models.ManyToManyField('ChatUser')
+
+    def __repr__(self):
+        return f"{self.__class__.__name__}('{self.room_id}')"
+
+    def __str__(self):
+        chat_users = ','.join([
+            str(chat_user.uid) for chat_user in self.chat_users.all()
+        ])
+        return f"{self.room_id}: {chat_users}"
 
 
 class Message(models.Model):

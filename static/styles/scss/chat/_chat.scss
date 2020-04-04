@@ -6,6 +6,27 @@ $screen-lg-min: 992px;
   }
 }
 
+@mixin status {
+  padding-left: 20px;
+  max-width: 80%;
+  margin: 0 auto;
+  text-align: center;
+}
+
+@mixin scroller {
+  scrollbar-color: darkgray transparent;
+  scrollbar-width: thin;
+
+  &::-webkit-scrollbar {
+    width: 5px;
+    background-color: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    color: darkgray;
+  }
+}
+
 @mixin chat($bg, $fg, $align) {
   justify-content: $align;
 
@@ -57,6 +78,10 @@ $screen-lg-min: 992px;
   padding-left: 0;
   padding-right: 0;
   margin: 0;
+  max-height: 250px;
+  overflow: auto;
+
+  @include scroller;
 }
 
 #chat {
@@ -64,8 +89,32 @@ $screen-lg-min: 992px;
   bottom: 0;
   right: 0;
   z-index: 999;
+  width: 50%;
+
+  @include lg {
+    width: 30%;
+  }
 }
 
 .close-chat {
   margin-bottom: 30px;
+}
+
+.connection-message {
+  @include status;
+
+  hr {
+    margin: 0 auto;
+    margin-top: 10px;
+    max-width: 50%;
+    border-color: dimgray;
+  }
+}
+
+.error-message {
+  @include status;
+
+  h4 {
+    color: #b24242;
+  }
 }

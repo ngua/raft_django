@@ -1,7 +1,6 @@
 import React from 'react';
 import UIkit from 'uikit';
 import Icons from 'uikit/dist/js/uikit-icons';
-import {v4 as uuidv4} from 'uuid';
 
 UIkit.use(Icons);
 
@@ -11,7 +10,8 @@ class ChatButton extends React.Component {
     this.openChatBox = this.openChatBox.bind(this);
   }
   openChatBox() {
-    const uid = uuidv4();
+    const sessionUid = JSON.parse(document.querySelector('#session-uid').textContent);
+    const uid = sessionUid['chat-uid'];
     this.props.openChatBox(uid);
   }
   render() {

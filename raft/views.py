@@ -1,4 +1,5 @@
 import json
+from uuid import uuid4
 from decimal import Decimal, ROUND_HALF_EVEN
 from django.core.cache import cache
 from django.shortcuts import render
@@ -19,11 +20,21 @@ from .about import about_us
 
 
 CACHE_TTL = getattr(settings, 'CACHE_TTL', DEFAULT_TIMEOUT)
+CHAT_MESSAGE_LIMIT = getattr(settings, 'CHAT_MESSAGE_LIMIT', 20)
 
 
 @cache_page(CACHE_TTL)
 def index(request):
-    context = {'switcher': switcher, 'slider': slider}
+    if request.session.get('chat_uid') is None:
+        request.session['chat_uid'] = str(uuid4())
+    chat_uid = {'chat-uid': request.session['chat_uid']}
+    chat_limit = {'chat-limit': CHAT_MESSAGE_LIMIT}
+    context = {
+        'switcher': switcher,
+        'slider': slider,
+        'chat_uid': chat_uid,
+        'chat_limit': chat_limit
+    }
     return render(request, 'raft/index.html', context=context)
 
 

@@ -9,12 +9,13 @@ class ChatBox extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      connected: false,
       message: '',
       messages: []
     };
     this.waitForSocketConnection(() => {
       WebSocketInstance.bindCallbacks(this.setMessages.bind(this), this.addMessage.bind(this));
-      WebSocketInstance.fetchMessages(this.props.currentChatUser);
+      WebSocketInstance.fetchMessages();
     });
     this.closeChatBox = this.closeChatBox.bind(this);
   }
@@ -23,12 +24,17 @@ class ChatBox extends React.Component {
     const component = this;
     setTimeout(
       () => {
-        if(WebSocketInstance.state() === 1){
+        if (WebSocketInstance.state() === 1) {
           console.log('Connected');
+          this.setState({
+            connected: true
+          })
           callback();
           return;
-        }
-        else{
+        } else {
+          this.setState({
+            connected: false
+          })
           console.log("Attempting connection...");
           component.waitForSocketConnection(callback);
         }
@@ -67,6 +73,40 @@ class ChatBox extends React.Component {
     e.preventDefault();
   }
 
+  scrollToBottom = () => {
+    this.messagesEnd.scrollIntoView({behavior: 'smooth'});
+  }
+
+  componentDidMount() {
+    this.scrollToBottom();
+  }
+
+  componentDidUpdate() {
+    this.scrollToBottom();
+  }
+
+  renderConnectionMessage() {
+    const limit = JSON.parse(document.querySelector('#chat-limit').textContent)['chat-limit']
+    return (
+      <div className="connection-message">
+        <small>
+          {`You're connected! Displaying the last ${limit} messages.`}
+        </small>
+        <hr/>
+      </div>
+    )
+  }
+
+  renderErrorMessage() {
+    return (
+      <div className="error-message">
+        <h4>
+          Looks like something went wrong! Trying to reconnect...
+        </h4>
+      </div>
+    )
+  }
+
   renderMessages(messages) {
     const currentChatUser = this.props.currentChatUser;
     return messages.map((message, i) => {
@@ -92,7 +132,7 @@ class ChatBox extends React.Component {
     const textareaStyle = {
       resize: 'none',
       maxWidth: '80%'
-    }
+    };
     return (
       <div className="chat-box uk-background-secondary uk-grid uk-width-1-2@s uk-width-1-4@m uk-margin uk-animation-slide-bottom uk-box-shadow-large">
         <div className="close-chat">
@@ -104,15 +144,17 @@ class ChatBox extends React.Component {
         </div>
         <div className="chat-container">
           <div className="uk-align-center">
+            { this.state.connected ?
+                ( this.renderConnectionMessage() ) : ( this.renderErrorMessage() )
+            }
             <ul>
               { messages && this.renderMessages(messages) }
             </ul>
           </div>
+          <div ref={(el) => {this.messagesEnd = el;}}></div>
         </div>
         <fieldset className="uk-fieldset uk-text-center uk-light">
-          <form className="uk-form"
-            onSubmit={(e) => {this.sendMessageHandler(e, this.state.message)}}
-          >
+          <form className="uk-form" onSubmit={(e) => {this.sendMessageHandler(e, this.state.message)}}>
             <textarea
               type="text"
               className="uk-textarea"
@@ -129,7 +171,6 @@ class ChatBox extends React.Component {
         </fieldset>
       </div>
     )
-
   }
 }
 

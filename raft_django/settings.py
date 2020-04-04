@@ -77,6 +77,7 @@ CHANNEL_LAYERS = {
 
 
 ASGI_APPLICATION = 'raft_django.routing.application'
+CHAT_MESSAGE_LIMIT = 20
 
 TEMPLATES = [
     {

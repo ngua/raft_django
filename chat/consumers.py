@@ -1,18 +1,28 @@
 import json
 from uuid import UUID
-from time import strftime
+from django.conf import settings
 from channels.generic.websocket import AsyncWebsocketConsumer
 from channels.db import database_sync_to_async
 from .models import ChatUser, Message, Room
 
 
+CHAT_MESSAGE_LIMIT = getattr(settings, 'CHAT_MESSAGE_LIMIT', 20)
+
+
+def display_time(date):
+    return date.strftime('%H:%m')
+
+
 class CustomerChatConsumer(AsyncWebsocketConsumer):
     async def connect(self):
+        session_uid = await self.get_session_uid()
         uid = await self.get_uid(self.scope['url_route']['kwargs']['uid'])
+        if str(uid) != session_uid:
+            await self.disconnect(403)
         chat_user, _ = await self.get_chat_user(uid)
         user_room, _ = await self.get_room(uid)
-        self.room_name = f'test_{uid}'
         await self.add_user(user_room, chat_user)
+        self.room_name = f'{uid}'
         self.room_group_name = f'chat_{self.room_name}'
 
         await self.channel_layer.group_add(
@@ -22,13 +32,15 @@ class CustomerChatConsumer(AsyncWebsocketConsumer):
         await self.accept()
 
     async def disconnect(self, close_code):
+        if close_code == 403:
+            await self.channel_layer.group_discard(self.channel_name)
         await self.channel_layer.group_discard(
             self.room_group_name,
             self.channel_name
         )
 
     async def list_messages(self, data):
-        messages = await self.get_messages(10)
+        messages = await self.get_messages(self.room_name)
         response = {
             'command': 'messages',
             'messages': messages
@@ -47,7 +59,7 @@ class CustomerChatConsumer(AsyncWebsocketConsumer):
             'message': {
                 'text': message.text,
                 'author': await self.get_author(message),
-                'time': strftime('%H:%m')
+                'time': display_time(message.time_stamp)
             }
         }
         await self.channel_layer.group_send(
@@ -78,6 +90,10 @@ class CustomerChatConsumer(AsyncWebsocketConsumer):
             pass
 
     @database_sync_to_async
+    def get_session_uid(self):
+        return self.scope['session']['chat_uid']
+
+    @database_sync_to_async
     def get_room(self, uid):
         return Room.objects.get_or_create(room_id=uid)
 
@@ -95,13 +111,16 @@ class CustomerChatConsumer(AsyncWebsocketConsumer):
         return ChatUser.objects.get_or_create(uid=uid)
 
     @database_sync_to_async
-    def get_messages(self, limit):
-        messages = Message.objects.all().order_by('-time_stamp')[:limit]
+    def get_messages(self, room_id):
+        room = Room.objects.get(room_id=room_id)
+        messages = Message.objects.filter(
+            author__in=room.chat_users.all()
+        ).order_by('-time_stamp').all()[:CHAT_MESSAGE_LIMIT]
         return [
             {
                 'text': message.text,
                 'author': str(message.author.get().uid),
-                'time': message.time_stamp.isoformat()
+                'time': display_time(message.time_stamp)
             } for message in messages
         ]
 
