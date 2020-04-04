@@ -1,0 +1,40 @@
+{% extends "admin/change_list.html" %}
+{% load i18n admin_urls static %}
+{% block extrastyle %}
+{{ block.super }}
+<link rel="stylesheet" href="{% static 'node_modules/uikit/dist/css/uikit.min.css' %}">
+<script src="{% static 'node_modules/uikit/dist/js/uikit.min.js' %}"></script>
+{% endblock %}
+{% block breadcrumbs %}
+<div class="breadcrumbs">
+  <a href="{% url 'admin:index' %}">{% trans 'Home' %}</a>
+  &rsaquo; Live Chat
+</div>
+{% endblock %}
+{% block content %}
+<div class="uk-container uk-container-large">
+  <div class="" uk-grid>
+    <div>
+      <div uk-grid>
+        <div class="uk-width-auto@m">
+          <ul class="uk-tab-left" uk-tab="connect: #rooms; animation: uk-animation-fade">
+            {% for room in rooms %}
+            <li style="list-style-type: none;"><a href="#">{{ room.pk }}</a></li>
+            {% endfor %}
+          </ul>
+        </div>
+        <div class="uk-width-expand@m">
+          <ul id="rooms" class="uk-switcher">
+            {% for room in rooms %}
+            <li style="list-style-type: none;">
+              <div>
+              </div>
+            </li>
+            {% endfor %}
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

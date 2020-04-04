@@ -13,27 +13,8 @@ def display_time(date):
     return date.strftime('%H:%m')
 
 
-class CustomerChatConsumer(AsyncWebsocketConsumer):
-    async def connect(self):
-        session_uid = await self.get_session_uid()
-        uid = await self.get_uid(self.scope['url_route']['kwargs']['uid'])
-        if str(uid) != session_uid:
-            await self.disconnect(403)
-        chat_user, _ = await self.get_chat_user(uid)
-        user_room, _ = await self.get_room(uid)
-        await self.add_user(user_room, chat_user)
-        self.room_name = f'{uid}'
-        self.room_group_name = f'chat_{self.room_name}'
-
-        await self.channel_layer.group_add(
-            self.room_group_name,
-            self.channel_name
-        )
-        await self.accept()
-
+class ChatConsumer(AsyncWebsocketConsumer):
     async def disconnect(self, close_code):
-        if close_code == 403:
-            await self.channel_layer.group_discard(self.channel_name)
         await self.channel_layer.group_discard(
             self.room_group_name,
             self.channel_name
@@ -47,32 +28,10 @@ class CustomerChatConsumer(AsyncWebsocketConsumer):
         }
         await self.send(json.dumps(response))
 
-    async def new_message(self, data):
-        uid, text = data['from'], data['text']
-        chat_user, _ = await self.get_chat_user(uid)
-        message = await self.create_message(
-            author=chat_user,
-            text=text
-        )
-        response = {
-            'command': 'new_message',
-            'message': {
-                'text': message.text,
-                'author': await self.get_author(message),
-                'time': display_time(message.time_stamp)
-            }
-        }
-        await self.channel_layer.group_send(
-            self.room_group_name, {
-                'type': 'chat_message',
-                'message': response
-            }
-        )
-
     async def receive(self, text_data):
         commands = {
-            'list_messages': self.list_messages,
-            'new_message': self.new_message
+            'list-messages': self.list_messages,
+            'new-message': self.new_message
         }
         json_data = json.loads(text_data)
         command = json_data['command']
@@ -90,21 +49,70 @@ class CustomerChatConsumer(AsyncWebsocketConsumer):
             pass
 
     @database_sync_to_async
-    def get_session_uid(self):
-        return self.scope['session']['chat_uid']
-
-    @database_sync_to_async
     def get_room(self, uid):
         return Room.objects.get_or_create(room_id=uid)
+
+    @database_sync_to_async
+    def get_author(self, message):
+        return str(message.author.get().uid)
+
+    @database_sync_to_async
+    def create_message(self, author, text):
+        return Message.objects.create(
+            content_object=author,
+            text=text
+        )
+
+
+class CustomerChatConsumer(ChatConsumer):
+    async def connect(self):
+        session_uid = await self.get_session_uid()
+        uid = await self.get_uid(self.scope['url_route']['kwargs']['uid'])
+        self.room_name = f'{uid}'
+        self.room_group_name = f'chat_{self.room_name}'
+        if str(uid) != session_uid:
+            await self.disconnect(403)
+        else:
+            chat_user, _ = await self.get_chat_user(uid)
+            user_room, _ = await self.get_room(uid)
+            await self.add_user(user_room, chat_user)
+
+            await self.channel_layer.group_add(
+                self.room_group_name,
+                self.channel_name
+            )
+            await self.accept()
+
+    async def new_message(self, data):
+        uid, text = data['from'], data['text']
+        chat_user, _ = await self.get_chat_user(uid)
+        message = await self.create_message(
+            author=chat_user,
+            text=text
+        )
+        response = {
+            'command': 'new-message',
+            'message': {
+                'text': message.text,
+                'author': await self.get_author(message),
+                'time': display_time(message.time_stamp)
+            }
+        }
+        await self.channel_layer.group_send(
+            self.room_group_name, {
+                'type': 'chat_message',
+                'message': response
+            }
+        )
+
+    @database_sync_to_async
+    def get_session_uid(self):
+        return self.scope['session']['chat_uid']
 
     @database_sync_to_async
     def add_user(self, room, chat_user):
         if chat_user not in room.chat_users.all():
             room.chat_users.add(chat_user)
-
-    @database_sync_to_async
-    def get_author(self, message):
-        return str(message.author.get().uid)
 
     @database_sync_to_async
     def get_chat_user(self, uid):
@@ -124,13 +132,19 @@ class CustomerChatConsumer(AsyncWebsocketConsumer):
             } for message in messages
         ]
 
-    @database_sync_to_async
-    def create_message(self, author, text):
-        return Message.objects.create(
-            content_object=author,
-            text=text
-        )
 
-
-class AdminChatConsumer(AsyncWebsocketConsumer):
-    pass
+class AdminChatConsumer(ChatConsumer):
+    async def connect(self):
+        uid = await self.get_uid(self.scope['url_route']['kwargs']['uid'])
+        room, _ = await self.get_room(uid)
+        self.room_name = f'{uid}'
+        self.room_group_name = f'chat_{self.room_name}'
+        self.user = self.scope['user']
+        if not self.user.is_authenticated or not self.user.is_staff:
+            await self.disconnect(403)
+        else:
+            await self.channel_layer.group_add(
+                self.room_group_name,
+                self.channel_name
+            )
+            await self.accept()

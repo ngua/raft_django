@@ -85,6 +85,13 @@ class ChatBox extends React.Component {
     this.scrollToBottom();
   }
 
+  componentDidCatch(error, info) {
+    this.setState({
+      connected: false
+    });
+  }
+
+
   renderConnectionMessage() {
     const limit = JSON.parse(document.querySelector('#chat-limit').textContent)['chat-limit']
     return (

@@ -23,17 +23,12 @@ class WebSocketService {
 
     this.socketRef.onerror = e => {
       console.log(e);
-      this.socketDisplayError();
     };
 
     this.socketRef.onclose = () => {
       this.connect(uid);
     };
 
-  }
-
-  socketDisplayError() {
-    console.log('error');
   }
 
   socketNewMessage(data){
@@ -46,23 +41,23 @@ class WebSocketService {
 
     if (command === 'messages') {
       this.callbacks[command](parsedData.messages);
-    } else if (command === 'new_message') {
+    } else if (command === 'new-message') {
       this.callbacks[command](parsedData.message);
     }
 
   }
 
   fetchMessages() {
-    this.sendMessage({command: 'list_messages'});
+    this.sendMessage({command: 'list-messages'});
   }
 
   newChatMessage(message) {
-    this.sendMessage({command: 'new_message', from: message.from, text: message.text});
+    this.sendMessage({command: 'new-message', from: message.from, text: message.text});
   }
 
-  bindCallbacks(messagesCallback, newMessageCallback) {
-    this.callbacks['messages'] = messagesCallback;
-    this.callbacks['new_message'] = newMessageCallback;
+  bindCallbacks(setMessages, addMessage) {
+    this.callbacks['messages'] = setMessages;
+    this.callbacks['new-message'] = addMessage;
   }
 
   sendMessage(data) {
