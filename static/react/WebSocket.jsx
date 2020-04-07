@@ -1,16 +1,7 @@
 class WebSocketService {
-  static instance = null;
   callbacks = {};
-
-  static getInstance() {
-    if (!WebSocketService.instance) {
-      WebSocketService.instance = new WebSocketService();
-    }
-    return WebSocketService.instance;
-  }
-
-  constructor() {
-    this.socketRef = null;
+  constructor(path) {
+    this.connect(path);
   }
 
   connect(path) {
@@ -30,7 +21,12 @@ class WebSocketService {
 
   }
 
+  close() {
+    this.socketRef.close();
+  }
+
   socketNewMessage(data){
+    console.log('called');
     const parsedData = JSON.parse(data);
     const command = parsedData.command;
 
@@ -54,7 +50,7 @@ class WebSocketService {
     this.sendMessage({command: 'new-message', from: message.from, text: message.text});
   }
 
-  bindCallbacks(setMessages, addMessage) {
+  bindCallbacks = (setMessages, addMessage) => {
     this.callbacks['messages'] = setMessages;
     this.callbacks['new-message'] = addMessage;
   }
@@ -74,6 +70,4 @@ class WebSocketService {
 
 }
 
-let WebSocketInstance = WebSocketService.getInstance();
-
-export default WebSocketInstance;
+export default WebSocketService;

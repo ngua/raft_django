@@ -1,14 +1,15 @@
 import React from 'react';
 import ChatButton from './ChatButton';
 import ChatBox from './ChatBox';
-import WebSocketInstance from './WebSocket';
+import WebSocketService from './WebSocket';
 
 class ChatApp extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       active: false,
-      chatUid: ''
+      chatUid: '',
+      ws: null
     };
     this.handleOpen = this.handleOpen.bind(this);
     this.handleClose = this.handleClose.bind(this);
@@ -22,7 +23,9 @@ class ChatApp extends React.Component {
       }
     },() => {
       const path = `ws://${window.location.host}/ws/chat/${chatUid}/`
-      WebSocketInstance.connect(path);
+      this.setState({ws: new WebSocketService(path)}, () => {
+        this.state.ws.connect(path);
+        });
     });
   }
 
@@ -40,6 +43,7 @@ class ChatApp extends React.Component {
           <ChatBox
             closeChatBox={this.handleClose}
             currentChatUser={chatUid}
+            {...this.state}
           />
         ) : (
           <ChatButton

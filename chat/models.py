@@ -13,6 +13,7 @@ class Room(models.Model):
     room_id = models.UUIDField(null=False, editable=False, default=uuid4)
     last_active = models.DateTimeField(auto_now=True)
     chat_users = models.ManyToManyField(ChatClient)
+    messages = models.ManyToManyField('Message')
 
     def __repr__(self):
         return f"{self.__class__.__name__}('{self.room_id}')"

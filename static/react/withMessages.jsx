@@ -1,5 +1,4 @@
 import React from 'react';
-import WebSocketInstance from './WebSocket';
 
 const withMessages = (WrappedComponent) => {
   return class extends React.Component {
@@ -14,7 +13,7 @@ const withMessages = (WrappedComponent) => {
 
     waitForSocketConnection = (callback) => {
       setTimeout(() => {
-        if (WebSocketInstance.state() === 1) {
+        if (this.props.ws.state() === 1) {
           console.log('Connected');
           this.setState({
             connected: true
@@ -35,6 +34,7 @@ const withMessages = (WrappedComponent) => {
       this.setState({
         messages : messages.reverse()
       });
+      console.log(this.state.messages);
     }
 
     messageChangeHandler = (e) => {
@@ -47,7 +47,7 @@ const withMessages = (WrappedComponent) => {
       const messageObject = {
         text: message
       };
-      WebSocketInstance.newChatMessage(messageObject);
+      this.props.ws.newChatMessage(messageObject);
       this.setState({
         message : ''
       });

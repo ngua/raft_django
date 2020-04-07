@@ -1,12 +1,10 @@
 import React from 'react';
-import WebSocketInstance from './WebSocket';
 import ChatForm from './ChatForm';
 import withMessages from './withMessages';
 
 class AdminChatPanel extends React.Component {
   constructor(props) {
     super(props);
-
     this.messagesEndRef = React.createRef();
   }
 
@@ -16,8 +14,8 @@ class AdminChatPanel extends React.Component {
 
   componentDidMount() {
     this.props.waitForSocketConnection(() => {
-      WebSocketInstance.bindCallbacks(this.props.setMessages, this.props.addMessage);
-      WebSocketInstance.fetchMessages();
+      this.props.ws.bindCallbacks(this.props.setMessages, this.props.addMessage);
+      this.props.ws.fetchMessages();
     });
     this.scrollToBottom();
   }

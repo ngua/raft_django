@@ -67,17 +67,17 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
     @database_sync_to_async
     def create_message(self, author, text):
-        self.room.save()
-        return Message.objects.create(
+        message = Message.objects.create(
             author=author,
             text=text
         )
+        self.room.messages.add(message)
+        self.room.save()
+        return message
 
     @database_sync_to_async
     def get_messages(self):
-        messages = Message.objects.filter(
-            author__in=self.room.chat_users.all()
-        ).order_by('-time_stamp').all()[:CHAT_MESSAGE_LIMIT]
+        messages = self.room.messages.order_by('-time_stamp').all()[:CHAT_MESSAGE_LIMIT]
         return [
             {
                 'text': message.text,

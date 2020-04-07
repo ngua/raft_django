@@ -1,9 +1,8 @@
 import React from 'react';
 import UIkit from 'uikit';
 import Icons from 'uikit/dist/js/uikit-icons';
-import WebSocketInstance from './WebSocket'
 import ChatForm from './ChatForm';
-import  withMessages from './withMessages';
+import withMessages from './withMessages';
 
 UIkit.use(Icons);
 
@@ -24,8 +23,8 @@ class ChatBox extends React.Component {
 
   componentDidMount() {
     this.props.waitForSocketConnection(() => {
-      WebSocketInstance.bindCallbacks(this.props.setMessages, this.props.addMessage);
-      WebSocketInstance.fetchMessages();
+      this.props.ws.bindCallbacks(this.props.setMessages, this.props.addMessage);
+      this.props.ws.fetchMessages();
     });
     this.scrollToBottom();
   }

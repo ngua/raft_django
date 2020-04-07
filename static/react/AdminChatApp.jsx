@@ -1,7 +1,7 @@
 import React from 'react';
 import AdminRoomList from './AdminRoomList';
 import AdminChatPanel from './AdminChatPanel';
-import WebSocketInstance from './WebSocket';
+import WebSocketService from './WebSocket';
 
 
 class AdminChatApp extends React.Component {
@@ -9,7 +9,8 @@ class AdminChatApp extends React.Component {
     super(props);
     this.state = {
       rooms: [],
-      currentRoom: ''
+      currentRoom: '',
+      ws: null
     };
   }
 
@@ -26,7 +27,7 @@ class AdminChatApp extends React.Component {
     this.fetchRooms()
       .then(
         (result) => {
-          this.setState({rooms: result.rooms})
+          this.setState({rooms: result.rooms});
         },
         (error) => {
           console.log(`Error: ${error}`);
@@ -41,8 +42,19 @@ class AdminChatApp extends React.Component {
       }
     }, () => {
       const path = `ws://${window.location.host}/ws/chat/admin/${this.state.currentRoom.id}/`
-      WebSocketInstance.connect(path);
+      const ws = new WebSocketService(path);
+      this.setState({ ws: ws }, () => {
+        this.state.ws.connect(path);
+      })
     });
+  }
+
+  renderChat() {
+    return (
+      <div className="uk-width-expand@m">
+        { <AdminChatPanel {...this.state} /> }
+      </div>
+    )
   }
 
   render() {
@@ -60,9 +72,7 @@ class AdminChatApp extends React.Component {
             />
           </ul>
         </div>
-        <div className="uk-width-expand@m">
-          { WebSocketInstance.socketRef != null && <AdminChatPanel {...this.state} /> }
-        </div>
+        {this.state.currentRoom && this.renderChat()}
       </div>
     )
   }
