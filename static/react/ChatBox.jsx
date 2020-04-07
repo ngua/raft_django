@@ -2,82 +2,31 @@ import React from 'react';
 import UIkit from 'uikit';
 import Icons from 'uikit/dist/js/uikit-icons';
 import WebSocketInstance from './WebSocket'
+import ChatForm from './ChatForm';
+import  withMessages from './withMessages';
 
 UIkit.use(Icons);
 
 class ChatBox extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-      connected: false,
-      message: '',
-      messages: []
-    };
-    this.waitForSocketConnection(() => {
-      WebSocketInstance.bindCallbacks(this.setMessages.bind(this), this.addMessage.bind(this));
-      WebSocketInstance.fetchMessages();
-    });
+    this.messagesEndRef = React.createRef();
     this.closeChatBox = this.closeChatBox.bind(this);
   }
 
-  waitForSocketConnection(callback) {
-    const component = this;
-    setTimeout(
-      () => {
-        if (WebSocketInstance.state() === 1) {
-          console.log('Connected');
-          this.setState({
-            connected: true
-          })
-          callback();
-          return;
-        } else {
-          this.setState({
-            connected: false
-          })
-          console.log("Attempting connection...");
-          component.waitForSocketConnection(callback);
-        }
-      }, 100);
-  }
-
-  addMessage(message) {
-    this.setState({
-      messages : [...this.state.messages, message]
-    });
-  }
-
-  setMessages(messages) {
-    this.setState({
-      messages : messages.reverse()
-    });
-  }
-
-  messageChangeHandler = (e) => {
-    this.setState({
-      message : e.target.value
-    });
-  }
-
-  sendMessageHandler = (e, message) => {
-    const messageObject = {
-      from: this.props.currentChatUser,
-      text: message
-    };
-    WebSocketInstance.newChatMessage(messageObject);
-
-    this.setState({
-      message : ''
-    });
-
-    e.preventDefault();
+  waitForSocketConnection() {
+    this.props.waitForSocketConnection();
   }
 
   scrollToBottom = () => {
-    this.messagesEnd.scrollIntoView({behavior: 'smooth'});
+    this.messagesEndRef.current.scrollIntoView({behavior: 'smooth'});
   }
 
   componentDidMount() {
+    this.props.waitForSocketConnection(() => {
+      WebSocketInstance.bindCallbacks(this.props.setMessages, this.props.addMessage);
+      WebSocketInstance.fetchMessages();
+    });
     this.scrollToBottom();
   }
 
@@ -85,100 +34,45 @@ class ChatBox extends React.Component {
     this.scrollToBottom();
   }
 
-  componentDidCatch(error, info) {
-    this.setState({
-      connected: false
-    });
-  }
-
-
-  renderConnectionMessage() {
-    const limit = JSON.parse(document.querySelector('#chat-limit').textContent)['chat-limit']
-    return (
-      <div className="connection-message">
-        <small>
-          {`You're connected! Displaying the last ${limit} messages.`}
-        </small>
-        <hr/>
-      </div>
-    )
-  }
-
-  renderErrorMessage() {
-    return (
-      <div className="error-message">
-        <h4>
-          Looks like something went wrong! Trying to reconnect...
-        </h4>
-      </div>
-    )
-  }
-
-  renderMessages(messages) {
-    const currentChatUser = this.props.currentChatUser;
-    return messages.map((message, i) => {
-      const time = message.time;
-      const userClass = message.author === currentChatUser ? "user" : "admin";
-      return (
-        <li key={i} className="chat-messages uk-animation-fade">
-          <div className={`${userClass}`}>
-            <p> {message.text} </p>
-            <small>{time}</small>
-          </div>
-        </li>
-      )
-    })
-  }
-
   closeChatBox() {
     this.props.closeChatBox();
   }
 
   render() {
-    const messages = this.state.messages;
-    const textareaStyle = {
-      resize: 'none',
-      maxWidth: '80%'
+    const connected = this.props.connected;
+    const message = this.props.message;
+    const messages = this.props.messages;
+    const methods = {
+      messageChangeHandler: this.props.messageChangeHandler,
+      sendMessageHandler: this.props.sendMessageHandler
     };
+    const currentChatUser = this.props.currentChatUser;
+    const limit = JSON.parse(document.querySelector('#chat-limit').textContent)['chat-limit'];
     return (
       <div className="chat-box uk-background-secondary uk-grid uk-width-1-2@s uk-width-1-4@m uk-margin uk-animation-slide-bottom uk-box-shadow-large">
         <div className="close-chat">
-          <button
-            type="button" uk-icon="icon: close" className="uk-align-right uk-margin-remove"
-            onClick={this.closeChatBox}
-          >
-          </button>
+          <button type="button" uk-icon="icon: close" className="uk-align-right uk-margin-remove" onClick={this.closeChatBox}/>
         </div>
         <div className="chat-container">
           <div className="uk-align-center">
-            { this.state.connected ?
-                ( this.renderConnectionMessage() ) : ( this.renderErrorMessage() )
+            { connected ?
+                ( this.props.renderConnectionMessage(limit) ) : ( this.props.renderLoader() )
             }
             <ul>
-              { messages && this.renderMessages(messages) }
+              { messages && this.props.renderMessages(messages, currentChatUser, 'user', 'admin') }
             </ul>
           </div>
-          <div ref={(el) => {this.messagesEnd = el;}}></div>
+          <div ref={this.messagesEndRef}/>
         </div>
-        <fieldset className="uk-fieldset uk-text-center uk-light">
-          <form className="uk-form" onSubmit={(e) => {this.sendMessageHandler(e, this.state.message)}}>
-            <textarea
-              type="text"
-              className="uk-textarea"
-              placeholder="..."
-              rows="2"
-              style={textareaStyle}
-              value={this.state.message}
-              onChange={this.messageChangeHandler}
-            />
-            <div className="uk-inline uk-padding-small uk-padding-remove-horizontal">
-              <button type="submit" className="uk-button uk-button-default" value="submit"> Send</button>
-            </div>
-          </form>
-        </fieldset>
+        <ChatForm
+          inline={true}
+          formClass={'uk-light'}
+          message={message}
+          {...methods}
+        />
       </div>
     )
   }
 }
 
-export default ChatBox;
+export default withMessages(ChatBox);

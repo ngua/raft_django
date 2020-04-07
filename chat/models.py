@@ -1,45 +1,62 @@
 from uuid import uuid4
 from django.db import models
-from django.contrib.contenttypes.fields import GenericRelation
-from django.contrib.contenttypes.fields import GenericForeignKey
-from django.contrib.contenttypes.models import ContentType
+from django.contrib.auth.models import User
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+
+
+class ChatClient(models.Model):
+    uid = models.UUIDField(null=False, editable=False, default=uuid4)
 
 
 class Room(models.Model):
     room_id = models.UUIDField(null=False, editable=False, default=uuid4)
-    last_active = models.TimeField(auto_now=True)
-    chat_users = models.ManyToManyField('ChatUser')
+    last_active = models.DateTimeField(auto_now=True)
+    chat_users = models.ManyToManyField(ChatClient)
 
     def __repr__(self):
         return f"{self.__class__.__name__}('{self.room_id}')"
 
     def __str__(self):
-        chat_users = ','.join([
-            str(chat_user.uid) for chat_user in self.chat_users.all()
-        ])
-        return f"{self.room_id}: {chat_users}"
+        return f"{self.room_id}: {self.last_active}"
 
 
 class Message(models.Model):
-    content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
-    object_id = models.PositiveIntegerField()
-    content_object = GenericForeignKey()
+    author = models.ForeignKey(ChatClient, on_delete=models.CASCADE)
     text = models.TextField()
     time_stamp = models.TimeField(auto_now_add=True)
 
     def __repr__(self):
-        return f"{self.__class__.__name__}('{self.content_object}', '{self.text}')"
+        return f"{self.__class__.__name__}('{self.author}', '{self.text}')"
 
     def __str__(self):
-        return f"{self.content_object}@{self.time_stamp}: {self.text}"
+        return f"{self.author}@{self.time_stamp}: {self.text}"
 
 
-class ChatUser(models.Model):
-    uid = models.UUIDField(null=False, editable=False, default=uuid4)
-    messages = GenericRelation(Message, related_query_name='author')
-
+class ChatUser(ChatClient):
     def __repr__(self):
         return f"{self.__class__.__name__}('{str(self.uid)}')"
 
     def __str__(self):
         return str(self.uid)
+
+
+class StaffChatProfile(ChatClient):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+
+    def __repr__(self):
+        return f"{self.__class__.__name__}('{self.user}')"
+
+    def __str__(self):
+        return f'{self.user.username}'
+
+
+@receiver(post_save, sender=User)
+def create_chat_profile(sender, created, instance, **kwargs):
+    if created:
+        StaffChatProfile.objects.create(user=instance)
+
+
+@receiver
+def save_chat_profile(sender, instance, **kwargs):
+    instance.profile.save()

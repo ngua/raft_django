@@ -3,7 +3,6 @@ import ChatButton from './ChatButton';
 import ChatBox from './ChatBox';
 import WebSocketInstance from './WebSocket';
 
-
 class ChatApp extends React.Component {
   constructor(props) {
     super(props);
@@ -22,7 +21,8 @@ class ChatApp extends React.Component {
         chatUid: state.chatUid === '' ? chatUid : state.chatUid
       }
     },() => {
-      WebSocketInstance.connect(chatUid);
+      const path = `ws://${window.location.host}/ws/chat/${chatUid}/`
+      WebSocketInstance.connect(path);
     });
   }
 
@@ -33,10 +33,10 @@ class ChatApp extends React.Component {
   }
 
   render() {
-    const chatUid = this.state.chatUid;
+    const {active, chatUid} = this.state;
     return (
       <div className="uk-animation-slide-top">
-        { this.state.active ? (
+        { active ? (
           <ChatBox
             closeChatBox={this.handleClose}
             currentChatUser={chatUid}

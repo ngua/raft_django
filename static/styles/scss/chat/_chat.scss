@@ -111,10 +111,8 @@ $screen-lg-min: 992px;
   }
 }
 
-.error-message {
+.loader {
   @include status;
 
-  h4 {
-    color: #b24242;
-  }
+  display: table;
 }

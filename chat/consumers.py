@@ -3,17 +3,24 @@ from uuid import UUID
 from django.conf import settings
 from channels.generic.websocket import AsyncWebsocketConsumer
 from channels.db import database_sync_to_async
-from .models import ChatUser, Message, Room
+from .models import ChatUser, Message, Room, StaffChatProfile
 
 
 CHAT_MESSAGE_LIMIT = getattr(settings, 'CHAT_MESSAGE_LIMIT', 20)
 
 
-def display_time(date):
-    return date.strftime('%H:%m')
+def display_time(time):
+    return time.strftime('%H:%M')
 
 
 class ChatConsumer(AsyncWebsocketConsumer):
+    async def connect(self):
+        await self.channel_layer.group_add(
+            self.room_group_name,
+            self.channel_name
+        )
+        await self.accept()
+
     async def disconnect(self, close_code):
         await self.channel_layer.group_discard(
             self.room_group_name,
@@ -21,7 +28,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
         )
 
     async def list_messages(self, data):
-        messages = await self.get_messages(self.room_name)
+        messages = await self.get_messages()
         response = {
             'command': 'messages',
             'messages': messages
@@ -45,49 +52,43 @@ class ChatConsumer(AsyncWebsocketConsumer):
         try:
             uid = UUID(uid, version=4)
             return uid
-        except ValueError:
-            pass
+        except ValueError as e:
+            raise e
 
     @database_sync_to_async
     def get_room(self, uid):
-        return Room.objects.get_or_create(room_id=uid)
+        self.room, _ = Room.objects.get_or_create(room_id=uid)
+        if self.user not in self.room.chat_users.all():
+            self.room.chat_users.add(self.user)
 
     @database_sync_to_async
     def get_author(self, message):
-        return str(message.author.get().uid)
+        return str(message.author.uid)
 
     @database_sync_to_async
     def create_message(self, author, text):
+        self.room.save()
         return Message.objects.create(
-            content_object=author,
+            author=author,
             text=text
         )
 
+    @database_sync_to_async
+    def get_messages(self):
+        messages = Message.objects.filter(
+            author__in=self.room.chat_users.all()
+        ).order_by('-time_stamp').all()[:CHAT_MESSAGE_LIMIT]
+        return [
+            {
+                'text': message.text,
+                'author': str(message.author.uid),
+                'time': display_time(message.time_stamp)
+            } for message in messages
+        ]
 
-class CustomerChatConsumer(ChatConsumer):
-    async def connect(self):
-        session_uid = await self.get_session_uid()
-        uid = await self.get_uid(self.scope['url_route']['kwargs']['uid'])
-        self.room_name = f'{uid}'
-        self.room_group_name = f'chat_{self.room_name}'
-        if str(uid) != session_uid:
-            await self.disconnect(403)
-        else:
-            chat_user, _ = await self.get_chat_user(uid)
-            user_room, _ = await self.get_room(uid)
-            await self.add_user(user_room, chat_user)
-
-            await self.channel_layer.group_add(
-                self.room_group_name,
-                self.channel_name
-            )
-            await self.accept()
-
-    async def new_message(self, data):
-        uid, text = data['from'], data['text']
-        chat_user, _ = await self.get_chat_user(uid)
+    async def new_message(self, text):
         message = await self.create_message(
-            author=chat_user,
+            author=self.user,
             text=text
         )
         response = {
@@ -105,46 +106,50 @@ class CustomerChatConsumer(ChatConsumer):
             }
         )
 
+
+class CustomerChatConsumer(ChatConsumer):
+    async def connect(self):
+        session_uid = await self.get_session_uid()
+        uid = await self.get_uid(self.scope['url_route']['kwargs']['uid'])
+        self.room_name = f'{uid}'
+        self.room_group_name = f'chat_{self.room_name}'
+        if str(uid) != session_uid:
+            await self.disconnect(403)
+        else:
+            self.user, _ = await self.get_chat_user(uid)
+            await self.get_room(uid)
+            await super().connect()
+
+    async def new_message(self, data):
+        text = data['text']
+        await super().new_message(text)
+
     @database_sync_to_async
     def get_session_uid(self):
         return self.scope['session']['chat_uid']
 
     @database_sync_to_async
-    def add_user(self, room, chat_user):
-        if chat_user not in room.chat_users.all():
-            room.chat_users.add(chat_user)
-
-    @database_sync_to_async
     def get_chat_user(self, uid):
         return ChatUser.objects.get_or_create(uid=uid)
-
-    @database_sync_to_async
-    def get_messages(self, room_id):
-        room = Room.objects.get(room_id=room_id)
-        messages = Message.objects.filter(
-            author__in=room.chat_users.all()
-        ).order_by('-time_stamp').all()[:CHAT_MESSAGE_LIMIT]
-        return [
-            {
-                'text': message.text,
-                'author': str(message.author.get().uid),
-                'time': display_time(message.time_stamp)
-            } for message in messages
-        ]
 
 
 class AdminChatConsumer(ChatConsumer):
     async def connect(self):
         uid = await self.get_uid(self.scope['url_route']['kwargs']['uid'])
-        room, _ = await self.get_room(uid)
-        self.room_name = f'{uid}'
+        user = self.scope['user']
+        self.room_name = uid
         self.room_group_name = f'chat_{self.room_name}'
-        self.user = self.scope['user']
-        if not self.user.is_authenticated or not self.user.is_staff:
+        if not user.is_authenticated or not user.is_staff:
             await self.disconnect(403)
         else:
-            await self.channel_layer.group_add(
-                self.room_group_name,
-                self.channel_name
-            )
-            await self.accept()
+            self.user = await self.get_staff_chat_profile(user.username)
+            await self.get_room(uid)
+            await super().connect()
+
+    async def new_message(self, data):
+        text = data['text']
+        await super().new_message(text)
+
+    @database_sync_to_async
+    def get_staff_chat_profile(self, username):
+        return StaffChatProfile.objects.get(user__username=username)

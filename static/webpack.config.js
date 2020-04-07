@@ -1,11 +1,14 @@
-const path = require("path")
+const path = require('path')
 const webpack = require('webpack')
 const BundleTracker = require('webpack-bundle-tracker')
 
 module.exports = {
   context: __dirname,
 
-  entry: './react/main.jsx',
+  entry: {
+    chat: './react/chat.jsx',
+    admin: './react/admin.jsx'
+  },
 
   output: {
     path: path.resolve('./bundles/'),

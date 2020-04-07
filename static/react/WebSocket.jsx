@@ -13,8 +13,7 @@ class WebSocketService {
     this.socketRef = null;
   }
 
-  connect(uid) {
-    const path = `ws://${window.location.host}/ws/chat/${uid}/`
+  connect(path) {
     this.socketRef = new WebSocket(path);
 
     this.socketRef.onmessage = e => {
@@ -26,7 +25,7 @@ class WebSocketService {
     };
 
     this.socketRef.onclose = () => {
-      this.connect(uid);
+      this.connect(path);
     };
 
   }
@@ -71,23 +70,6 @@ class WebSocketService {
 
   state() {
     return this.socketRef.readyState;
-  }
-
-  waitForSocketConnection(callback) {
-    const socket = this.socketRef;
-    const recursion = this.waitForSocketConnection;
-    setTimeout(
-      () => {
-        if(socket.readyState === 1){
-          console.log("Connected");
-          if(callback != null){
-            callback();
-          }
-          return;
-        } else {
-          console.log("Waiting to connect...");
-        }
-      }, 100);
   }
 
 }

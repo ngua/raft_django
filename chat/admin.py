@@ -1,17 +1,10 @@
 from django.contrib.admin import AdminSite
 from django.shortcuts import render
-from .models import Room
 
 
 class ChatAdminSite(AdminSite):
     def chat_view(self, request):
-        rooms = Room.objects.all()
-        context = {'rooms': rooms}
-        return render(
-            request,
-            'admin/chat.html',
-            context=context
-        )
+        return render(request, 'admin/chat.html')
 
     def get_urls(self):
         from django.urls import path
