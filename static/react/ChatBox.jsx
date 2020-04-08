@@ -58,7 +58,7 @@ class ChatBox extends React.Component {
                 ( this.props.renderConnectionMessage(limit) ) : ( this.props.renderLoader() )
             }
             <ul>
-              { messages && this.props.renderMessages(messages, currentChatUser, 'user', 'admin') }
+              { messages && this.props.renderMessages(messages, currentChatUser) }
             </ul>
           </div>
           <div ref={this.messagesEndRef}/>

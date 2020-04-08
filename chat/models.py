@@ -23,7 +23,7 @@ class Room(models.Model):
 
 
 class Message(models.Model):
-    author = models.ForeignKey(ChatClient, on_delete=models.CASCADE)
+    author = models.CharField(max_length=100)
     text = models.TextField()
     time_stamp = models.TimeField(auto_now_add=True)
 

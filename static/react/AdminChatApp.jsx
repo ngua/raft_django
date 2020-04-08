@@ -10,7 +10,8 @@ class AdminChatApp extends React.Component {
     this.state = {
       rooms: [],
       currentRoom: '',
-      ws: null
+      ws: null,
+      active: false
     };
   }
 
@@ -23,11 +24,15 @@ class AdminChatApp extends React.Component {
     return result;
   }
 
-  componentDidMount() {
+  setRooms() {
     this.fetchRooms()
       .then(
         (result) => {
-          this.setState({rooms: result.rooms});
+          this.setState({rooms: result.rooms}, () => {
+            if (this.state.rooms.length !== 0 ) {
+              this.selectRoom(result.rooms[0]);
+            }
+          });
         },
         (error) => {
           console.log(`Error: ${error}`);
@@ -35,26 +40,23 @@ class AdminChatApp extends React.Component {
       )
   }
 
+  componentDidMount() {
+    this.setRooms();
+  }
+
   selectRoom = (room) => {
     this.setState((state) => {
       return {
-        currentRoom: room !== state.currentRoom ? room : state.currentRoom
+        currentRoom: room,
+        active: !state.active
       }
     }, () => {
       const path = `ws://${window.location.host}/ws/chat/admin/${this.state.currentRoom.id}/`
       const ws = new WebSocketService(path);
-      this.setState({ ws: ws }, () => {
-        this.state.ws.connect(path);
+      this.setState({ ws: ws, active: true }, () => {
+        this.state.ws.connect();
       })
     });
-  }
-
-  renderChat() {
-    return (
-      <div className="uk-width-expand@m">
-        { <AdminChatPanel {...this.state} /> }
-      </div>
-    )
   }
 
   render() {
@@ -63,17 +65,36 @@ class AdminChatApp extends React.Component {
       listStyleType: 'none'
     };
     return (
-      <div uk-grid="true">
-        <div className="uk-width-auto@m">
-          <ul className="uk-tab-left" uk-tab="">
-            <AdminRoomList
-              {...this.state}
-              selectRoom={this.selectRoom}
-            />
-          </ul>
-        </div>
-        {this.state.currentRoom && this.renderChat()}
-      </div>
+      <>
+        { this.state.active? (
+          <div uk-grid="true">
+            <div className="uk-width-1-5@m">
+              <div>
+                <ul className="uk-tab-left" uk-tab="">
+                  <AdminRoomList
+                    {...this.state}
+                    selectRoom={this.selectRoom}
+                  />
+                </ul>
+              </div>
+            </div>
+            <div className="uk-width-expand@m">
+              <div className="">
+                <AdminChatPanel {...this.state} currentChatUser={'admin'} />
+              </div>
+            </div>
+          </div>
+        ) : (
+          <section className={'uk-section uk-section-muted uk-section-large'}>
+            <div className="uk-container">
+              <h1>No active rooms</h1>
+              <div className="uk-width-1-1@m">
+                <p>No chat rooms are currently active.</p>
+              </div>
+            </div>
+          </section>
+        )}
+      </>
     )
   }
 }

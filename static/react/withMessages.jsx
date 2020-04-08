@@ -34,7 +34,6 @@ const withMessages = (WrappedComponent) => {
       this.setState({
         messages : messages.reverse()
       });
-      console.log(this.state.messages);
     }
 
     messageChangeHandler = (e) => {
@@ -45,7 +44,8 @@ const withMessages = (WrappedComponent) => {
 
     sendMessageHandler = (e, message) => {
       const messageObject = {
-        text: message
+        text: message,
+        from: this.props.currentChatUser
       };
       this.props.ws.newChatMessage(messageObject);
       this.setState({
@@ -77,9 +77,9 @@ const withMessages = (WrappedComponent) => {
       )
     }
 
-    renderMessages(messages, currentChatUser, self, other) {
+    renderMessages(messages, currentChatUser) {
       return messages.map((message, i) => {
-        const userClass = message.author === currentChatUser ? self : other;
+        const userClass = message.author === currentChatUser ? 'self' : 'other';
         return (
           <li key={i} className="chat-messages uk-animation-fade">
             <div className={userClass}>

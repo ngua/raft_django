@@ -1,11 +1,11 @@
 class WebSocketService {
   callbacks = {};
   constructor(path) {
-    this.connect(path);
+    this.path = path;
   }
 
-  connect(path) {
-    this.socketRef = new WebSocket(path);
+  connect() {
+    this.socketRef = new WebSocket(this.path);
 
     this.socketRef.onmessage = e => {
       this.socketNewMessage(e.data);
@@ -16,7 +16,7 @@ class WebSocketService {
     };
 
     this.socketRef.onclose = () => {
-      this.connect(path);
+      this.connect();
     };
 
   }
@@ -26,7 +26,6 @@ class WebSocketService {
   }
 
   socketNewMessage(data){
-    console.log('called');
     const parsedData = JSON.parse(data);
     const command = parsedData.command;
 

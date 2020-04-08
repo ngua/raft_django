@@ -31,25 +31,29 @@ class AdminChatPanel extends React.Component {
   render() {
     const message = this.props.message;
     const messages = this.props.messages;
-    const currentChatUser = 'admin';
+    const currentChatUser = this.props.currentChatUser;
     const methods = {
       messageChangeHandler: this.props.messageChangeHandler,
       sendMessageHandler: this.props.sendMessageHandler
     };
     return (
-      <div>
+      <>
+      <div className={'admin-chat-container'}>
         { this.props.currentRoom ? (this.props.renderConnectionMessage()) : ( this.props.renderLoader())}
         <hr/>
-        <ul>
-          { messages && this.props.renderMessages(messages, currentChatUser, 'user', 'admin') }
-        </ul>
+          <ul>
+            { messages && this.props.renderMessages(messages, currentChatUser) }
+          </ul>
         <div ref={this.messagesEndRef}/>
+      </div>
+      <div>
         <ChatForm
           formClass={'uk-dark'}
           message={message}
           {...methods}
         />
       </div>
+      </>
     )
   }
 }

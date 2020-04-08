@@ -62,10 +62,6 @@ class ChatConsumer(AsyncWebsocketConsumer):
             self.room.chat_users.add(self.user)
 
     @database_sync_to_async
-    def get_author(self, message):
-        return str(message.author.uid)
-
-    @database_sync_to_async
     def create_message(self, author, text):
         message = Message.objects.create(
             author=author,
@@ -81,21 +77,21 @@ class ChatConsumer(AsyncWebsocketConsumer):
         return [
             {
                 'text': message.text,
-                'author': str(message.author.uid),
+                'author': message.author,
                 'time': display_time(message.time_stamp)
             } for message in messages
         ]
 
-    async def new_message(self, text):
+    async def new_message(self, text, author):
         message = await self.create_message(
-            author=self.user,
+            author=author,
             text=text
         )
         response = {
             'command': 'new-message',
             'message': {
                 'text': message.text,
-                'author': await self.get_author(message),
+                'author': message.author,
                 'time': display_time(message.time_stamp)
             }
         }
@@ -121,8 +117,8 @@ class CustomerChatConsumer(ChatConsumer):
             await super().connect()
 
     async def new_message(self, data):
-        text = data['text']
-        await super().new_message(text)
+        text, author = data['text'], data['from']
+        await super().new_message(text, author)
 
     @database_sync_to_async
     def get_session_uid(self):
@@ -147,8 +143,8 @@ class AdminChatConsumer(ChatConsumer):
             await super().connect()
 
     async def new_message(self, data):
-        text = data['text']
-        await super().new_message(text)
+        text, author = data['text'], data['from']
+        await super().new_message(text, author)
 
     @database_sync_to_async
     def get_staff_chat_profile(self, username):

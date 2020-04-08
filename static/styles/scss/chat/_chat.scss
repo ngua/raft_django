@@ -6,6 +6,14 @@ $screen-lg-min: 992px;
   }
 }
 
+@mixin chat-box($height) {
+  padding-left: 0;
+  padding-right: 0;
+  margin: 0;
+  overflow: auto;
+  max-height: $height;
+}
+
 @mixin status {
   padding-left: 20px;
   max-width: 80%;
@@ -64,24 +72,22 @@ $screen-lg-min: 992px;
   div {
     display: grid;
 
-    &.admin {
+    &.other {
       @include chat(slategray, #000, left);
     }
 
-    &.user {
+    &.self {
       @include chat(dodgerblue, #fff, right);
     }
   }
 }
 
 .chat-container {
-  padding-left: 0;
-  padding-right: 0;
-  margin: 0;
-  max-height: 250px;
-  overflow: auto;
+  @include chat-box(250px);
+}
 
-  @include scroller;
+.admin-chat-container {
+  @include chat-box(550px);
 }
 
 #chat {

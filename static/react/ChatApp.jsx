@@ -24,7 +24,7 @@ class ChatApp extends React.Component {
     },() => {
       const path = `ws://${window.location.host}/ws/chat/${chatUid}/`
       this.setState({ws: new WebSocketService(path)}, () => {
-        this.state.ws.connect(path);
+        this.state.ws.connect();
         });
     });
   }
